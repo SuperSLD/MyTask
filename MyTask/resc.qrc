@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/resc">
+        <file>resc/icon.svg</file>
+    </qresource>
+</RCC>
