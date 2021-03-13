@@ -7,6 +7,11 @@ using namespace styles;
 #include <QSvgWidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QSettings>
+#include <QJsonObject>
+#include <QMessageBox>
 
 #include <ui/view/qsvgbutton.h>
 using namespace screens;
@@ -60,6 +65,7 @@ RegistrationFragment::RegistrationFragment() {
     passwordEdit->setEchoMode(QLineEdit::Password);
 
     loginButton->setStyleSheet(BUTTON_SOLID);
+    connect(loginButton, &QPushButton::clicked, this, &RegistrationFragment::onRegPressed);
     buttonContainer->addWidget(loginEdit);
     buttonContainer->addWidget(passwordEdit);
     buttonContainer->addWidget(loginButton);
@@ -92,6 +98,59 @@ RegistrationFragment::RegistrationFragment() {
 RegistrationFragment::~RegistrationFragment() {
     delete loginEdit;
     delete passwordEdit;
+    delete networkManager;
+}
+
+void RegistrationFragment::onRegPressed() {
+    QJsonObject param;
+    param.insert("login", loginEdit->text());
+    param.insert("password", passwordEdit->text());
+    if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
+        delete networkManager;
+        networkManager = new QNetworkAccessManager();
+        connect(networkManager, &QNetworkAccessManager::finished, this, &RegistrationFragment::onRegResult);
+        QNetworkRequest request(QUrl(SERVER_URL + "/api/users/registration"));
+        request.setHeader(QNetworkRequest::ContentTypeHeader,
+                          QStringLiteral("application/json;charset=utf-8"));
+        networkManager->post(
+            request,
+            QJsonDocument(param).toJson(QJsonDocument::Compact)
+        );
+    }
+}
+
+void RegistrationFragment::onRegResult(QNetworkReply *reply) {
+    if(!reply->error()) {
+        QByteArray resp = reply->readAll();
+        qDebug() << resp << endl;
+        QJsonDocument doc = QJsonDocument::fromJson(resp);
+        QJsonObject obj;
+        if(!doc.isNull()) {
+            if(doc.isObject()) {
+                obj = doc.object();
+                qDebug() << obj["success"].toBool() << endl;
+            }
+            else {
+                qDebug() << "Document is not an object" << endl;
+            }
+        } else {
+            qDebug() << "Invalid JSON...\n" << endl;
+        }
+        if (obj["success"].toBool()) {
+            QSettings *settings = new QSettings("settings.ini", QSettings::IniFormat);
+            QString token = obj["data"].toObject()["token"].toString();
+            settings->setValue("token", token);
+            settings->sync();
+            newRootScreen(MAIN_TAG);
+        } else {
+            qDebug("login error");
+            QMessageBox::warning(this, "Ошибка", obj["message"].toString());
+        }
+    } else {
+        QMessageBox::warning(this, "Ошибка",
+            "При подключениии произошла ошибка.\n"        );
+    }
+    reply->deleteLater();
 }
 
 void RegistrationFragment::onBackPressed() {

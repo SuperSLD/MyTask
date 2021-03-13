@@ -4,6 +4,7 @@
 #include <common/base/basefragment.h>
 
 #include <QLineEdit>
+#include <QNetworkAccessManager>
 
 
 
@@ -12,11 +13,14 @@ class RegistrationFragment : public BaseFragment {
 private:
     QLineEdit *loginEdit;
     QLineEdit *passwordEdit;
+    QNetworkAccessManager *networkManager;
 public:
     RegistrationFragment();
     ~RegistrationFragment();
 public slots:
     void onBackPressed();
+    void onRegPressed();
+    void onRegResult(QNetworkReply *reply);
 };
 
 #endif // REGISTRATIONFRAGMENT_H

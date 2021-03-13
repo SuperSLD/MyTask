@@ -5,7 +5,8 @@
 
 
 namespace screens {
-    static const QString SERVER_URL = "https://jutter.online/mytask";
+    static const QString SERVER_URL = "http://jutter.online/mytask";
+    //static const QString SERVER_URL = "http://localhost:8080";
 
     static const QString SPLASH_TAG = "splash";
     static const QString START_TAG = "start";

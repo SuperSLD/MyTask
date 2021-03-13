@@ -10,6 +10,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
 #include <QSettings>
 
 #include "style/stylecontainer.h"
@@ -106,16 +107,18 @@ void LoginFragment::onLoginPressed() {
     QJsonObject param;
     param.insert("login", loginEdit->text());
     param.insert("password", passwordEdit->text());
-    delete networkManager;
-    networkManager = new QNetworkAccessManager();
-    connect(networkManager, &QNetworkAccessManager::finished, this, &LoginFragment::onHttpResult);
-    networkManager->post(
-        QNetworkRequest(
-            QUrl(SERVER_URL + "/api/login")
-        ),
-        QJsonDocument(param).toJson(QJsonDocument::Compact)
-    );
-
+    if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
+        delete networkManager;
+        networkManager = new QNetworkAccessManager();
+        connect(networkManager, &QNetworkAccessManager::finished, this, &LoginFragment::onHttpResult);
+        QNetworkRequest request(QUrl(SERVER_URL + "/api/users/login"));
+        request.setHeader(QNetworkRequest::ContentTypeHeader,
+                          QStringLiteral("application/json;charset=utf-8"));
+        networkManager->post(
+            request,
+            QJsonDocument(param).toJson(QJsonDocument::Compact)
+        );
+    }
 }
 
 void LoginFragment::onHttpResult(QNetworkReply *reply) {
@@ -139,13 +142,17 @@ void LoginFragment::onHttpResult(QNetworkReply *reply) {
             QSettings *settings = new QSettings("settings.ini", QSettings::IniFormat);
             QString token = obj["data"].toObject()["token"].toString();
             settings->setValue("token", token);
+            settings->sync();
             newRootScreen(MAIN_TAG);
         } else {
+            qDebug("login error");
             QMessageBox::warning(this, "Ошибка", obj["message"].toString());
         }
     } else {
-        QMessageBox::warning(this, "Ошибка", "При подключениии произошла ошибка.");
+        QMessageBox::warning(this, "Ошибка",
+            "При подключениии произошла ошибка.\n"        );
     }
+    reply->deleteLater();
 }
 
 void LoginFragment::onBackPressed() {
