@@ -155,6 +155,10 @@ void LoginFragment::onHttpResult(QNetworkReply *reply) {
     reply->deleteLater();
 }
 
+void LoginFragment::checkData() {
+
+}
+
 void LoginFragment::onBackPressed() {
     back();
 }

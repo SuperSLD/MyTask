@@ -22,6 +22,14 @@ public slots:
     void onBackPressed();
     void onLoginPressed();
     void onHttpResult(QNetworkReply *reply);
+
+    /**
+     * @brief checkData
+     *
+     * проверка введенных данных
+     * на корректность.
+     */
+    void checkData();
 };
 
 #endif // LOGINFRAGMENT_H
