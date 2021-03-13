@@ -1,4 +1,9 @@
 QT       += core gui
+QT += svg
+QT += network
+QT += sql
+QT += websockets
+QT += widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,7 +27,13 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     screensfactory.cpp \
-    ui/splashfragment.cpp
+    style/stylecontainer.cpp \
+    ui/auth/loginfragment.cpp \
+    ui/auth/registrationfragment.cpp \
+    ui/auth/startfragment.cpp \
+    ui/mainfragment.cpp \
+    ui/splashfragment.cpp \
+    ui/view/qsvgbutton.cpp
 
 HEADERS += \
     common/base/basefragment.h \
@@ -30,7 +41,13 @@ HEADERS += \
     common/navigator.h \
     mainwindow.h \
     screensfactory.h \
-    ui/splashfragment.h
+    style/stylecontainer.h \
+    ui/auth/loginfragment.h \
+    ui/auth/registrationfragment.h \
+    ui/auth/startfragment.h \
+    ui/mainfragment.h \
+    ui/splashfragment.h \
+    ui/view/qsvgbutton.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

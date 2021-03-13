@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "screensfactory.h"
+
 #include <QMainWindow>
 #include <QStackedWidget>
 
@@ -18,5 +20,10 @@ private:
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void navigateTo(QString tag);
+    void newRootScreen(QString tag);
+    void back();
+    void replace(QString tag);
 };
 #endif // MAINWINDOW_H

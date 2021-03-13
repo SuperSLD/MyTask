@@ -5,6 +5,7 @@
 #include <common/base/basescreensfactory.h>
 
 #include <QStackedWidget>
+#include <QLinkedList>
 
 
 /**
@@ -18,23 +19,52 @@
  *
  * @author Solyanoy Leonid (solyanoy.leonid@gmail.com)
  */
-class Navigator {
-
+class Navigator: public QObject {
+    Q_OBJECT
 private:
     QStackedWidget *currentContainer;
     BaseScreensFactory *screensFactory;
-    QLinkedList<BaseFragment *> *screenStack;
+    QLinkedList<BaseFragment*> stack;
 
+    /**
+     * @brief createAndConnect
+     * @param tag тэг создаваемого фрагмента.
+     *
+     * Создание фрагмента по тегу и его
+     * прикрепление к навигатору.
+     *
+     * @return фрагмент приконекченный к слотам навигатора.
+     */
+    BaseFragment* createAndConnect(QString tag);
+
+    /**
+     * @brief connectFragment
+     * @param fragment фрагмент который переходит
+     *        в активное состояние.
+     *
+     * Прикрепление текущего фрагмента
+     * к слотам навигатора для быстрого
+     * и удобного перехода между экранами.
+     *
+     */
+    void connectFragment(BaseFragment *fragment);
+
+    /**
+     * @brief disconnectFragment
+     * @param fragment
+     *
+     * Отключение сигналов от фрагмента.
+     */
+    void disconnectFragment(BaseFragment *fragment);
 public:
-    const QString SPLASH_TAG = "splash_tag";
-    const QString START_TAG = "start_tag";
-
     Navigator(
             QStackedWidget *container,
             BaseScreensFactory *screensFactory
     );
     ~Navigator();
+    BaseFragment* getStartScreen();
 
+public slots:
     /**
      * @brief navigateTo
      * @param tag имя следующего экрана.
@@ -59,6 +89,16 @@ public:
      * предыдущей цепочки.
      */
     void replace(QString tag);
+
+    /**
+     * @brief newRootScreen
+     * @param tag имя экрана на который
+     *        произойдет замена.
+     *
+     * Замена текущего экрана на новый и сброс
+     * всей цепочки экранов.
+     */
+    void newRootScreen(QString tag);
 };
 
 #endif // NAVIGATOR_H

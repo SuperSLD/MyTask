@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/resc">
         <file>resc/icon.svg</file>
+        <file>resc/splash.svg</file>
+        <file>resc/finances.svg</file>
+        <file>resc/arrow_back.svg</file>
     </qresource>
 </RCC>

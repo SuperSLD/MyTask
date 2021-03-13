@@ -5,11 +5,21 @@
 
 
 
-class SplashFragment: BaseFragment {
+class SplashFragment: public BaseFragment {
     Q_OBJECT
+
 public:
     SplashFragment();
     ~SplashFragment();
+public slots:
+    /**
+     * @brief openStartScreen
+     *
+     * Проверяем сохранен ли токен
+     * и переходим либо к стартовому экрану
+     * либо к главному.
+     */
+    void openStartScreen();
 };
 
 #endif // SPLASHFRAGMENT_H
