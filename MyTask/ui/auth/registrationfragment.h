@@ -5,6 +5,7 @@
 
 #include <QLineEdit>
 #include <QNetworkAccessManager>
+#include <QPushButton>
 
 
 
@@ -14,6 +15,7 @@ private:
     QLineEdit *loginEdit;
     QLineEdit *passwordEdit;
     QNetworkAccessManager *networkManager;
+    QPushButton *loginButton;
 public:
     RegistrationFragment();
     ~RegistrationFragment();
@@ -21,6 +23,8 @@ public slots:
     void onBackPressed();
     void onRegPressed();
     void onRegResult(QNetworkReply *reply);
+
+    void checkData();
 };
 
 #endif // REGISTRATIONFRAGMENT_H

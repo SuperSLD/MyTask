@@ -33,13 +33,17 @@ RegistrationFragment::RegistrationFragment() {
 
     QVBoxLayout *startVerticalContent = new QVBoxLayout;
     QLabel *title = new QLabel("Регистрация");
-    QLabel *subtitle = new QLabel("Придумайте себе пароль и логин для входа, чтобы мы могли вас узнавать на других устройствах.");
+    QLabel *subtitle = new QLabel(
+                "Придумайте себе пароль и логин для входа, "
+                "чтобы мы могли вас узнавать на других устройствах.\n"
+                "Логин и пароль должны быть длиннее пяти символов."
+                );
     loginEdit = new QLineEdit;
     passwordEdit = new QLineEdit;
 
     QVBoxLayout *buttonContainer = new QVBoxLayout;
 
-    QPushButton *loginButton = new QPushButton("Создать профиль");
+    loginButton = new QPushButton("Создать профиль");
 
     title->setStyleSheet(TITLE_LABLE);
     subtitle->setStyleSheet(HINT_LABLE);
@@ -63,6 +67,8 @@ RegistrationFragment::RegistrationFragment() {
     passwordEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     passwordEdit->setPlaceholderText("Пароль");
     passwordEdit->setEchoMode(QLineEdit::Password);
+    connect(loginEdit, &QLineEdit::textChanged, this, &RegistrationFragment::checkData);
+    connect(passwordEdit, &QLineEdit::textChanged, this, &RegistrationFragment::checkData);
 
     loginButton->setStyleSheet(BUTTON_SOLID);
     connect(loginButton, &QPushButton::clicked, this, &RegistrationFragment::onRegPressed);
@@ -93,11 +99,15 @@ RegistrationFragment::RegistrationFragment() {
     mainVLayout->setAlignment(Qt::AlignCenter);
 
     this->setLayout(mainVLayout);
+    networkManager = new QNetworkAccessManager();
+    connect(networkManager, &QNetworkAccessManager::finished, this, &RegistrationFragment::onRegResult);
+    checkData();
 }
 
 RegistrationFragment::~RegistrationFragment() {
     delete loginEdit;
     delete passwordEdit;
+    delete loginButton;
     delete networkManager;
 }
 
@@ -106,9 +116,6 @@ void RegistrationFragment::onRegPressed() {
     param.insert("login", loginEdit->text());
     param.insert("password", passwordEdit->text());
     if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
-        delete networkManager;
-        networkManager = new QNetworkAccessManager();
-        connect(networkManager, &QNetworkAccessManager::finished, this, &RegistrationFragment::onRegResult);
         QNetworkRequest request(QUrl(SERVER_URL + "/api/users/registration"));
         request.setHeader(QNetworkRequest::ContentTypeHeader,
                           QStringLiteral("application/json;charset=utf-8"));
@@ -151,6 +158,14 @@ void RegistrationFragment::onRegResult(QNetworkReply *reply) {
             "При подключениии произошла ошибка.\n"        );
     }
     reply->deleteLater();
+}
+
+void RegistrationFragment::checkData() {
+    if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
+        loginButton->setStyleSheet(BUTTON_SOLID);
+    } else {
+        loginButton->setStyleSheet(BUTTON_DISABLED);
+    }
 }
 
 void RegistrationFragment::onBackPressed() {

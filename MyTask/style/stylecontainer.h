@@ -66,6 +66,19 @@ namespace styles{
             "background-color:"+COLOR_BUTTON_PRESSED+";"
             "}";
 
+    static const QString BUTTON_DISABLED =
+            "QPushButton {"
+            "color: "+COLOR_TEXT_HINT+";"
+            "background-color:"+COLOR_BORDER+";"
+            "border:none;"
+            "padding:8px;"
+            "border-radius:8px;"
+            "font-size:16px;"
+            "}"
+            "QPushButton:hover {"
+            "background-color:"+COLOR_BORDER+";"
+            "}";
+
     static const QString BUTTON_EMPTY =
             "QPushButton {"
             "color: "+COLOR_PRIMARY+";"

@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QPushButton>
 
 
 
@@ -14,6 +15,7 @@ class LoginFragment: public BaseFragment {
 private:
     QLineEdit *loginEdit;
     QLineEdit *passwordEdit;
+    QPushButton *loginButton;
     QNetworkAccessManager *networkManager;
 public:
     LoginFragment();

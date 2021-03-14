@@ -41,7 +41,7 @@ LoginFragment::LoginFragment() {
 
     QVBoxLayout *buttonContainer = new QVBoxLayout;
 
-    QPushButton *loginButton = new QPushButton("Войти");
+    loginButton = new QPushButton("Войти");
 
     title->setStyleSheet(TITLE_LABLE);
     subtitle->setStyleSheet(HINT_LABLE);
@@ -65,6 +65,8 @@ LoginFragment::LoginFragment() {
     passwordEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     passwordEdit->setPlaceholderText("Пароль");
     passwordEdit->setEchoMode(QLineEdit::Password);
+    connect(loginEdit, &QLineEdit::textChanged, this, &LoginFragment::checkData);
+    connect(passwordEdit, &QLineEdit::textChanged, this, &LoginFragment::checkData);
 
     loginButton->setStyleSheet(BUTTON_SOLID);
     connect(loginButton, &QPushButton::clicked, this, &LoginFragment::onLoginPressed);
@@ -95,12 +97,16 @@ LoginFragment::LoginFragment() {
     mainVLayout->setAlignment(Qt::AlignCenter);
 
     this->setLayout(mainVLayout);
+    checkData();
+    networkManager = new QNetworkAccessManager();
+    connect(networkManager, &QNetworkAccessManager::finished, this, &LoginFragment::onHttpResult);
 }
 
 LoginFragment::~LoginFragment() {
     delete loginEdit;
     delete passwordEdit;
-    delete networkManager;
+    delete loginButton;
+    networkManager->clearAccessCache();
 }
 
 void LoginFragment::onLoginPressed() {
@@ -108,20 +114,21 @@ void LoginFragment::onLoginPressed() {
     param.insert("login", loginEdit->text());
     param.insert("password", passwordEdit->text());
     if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
-        delete networkManager;
-        networkManager = new QNetworkAccessManager();
-        connect(networkManager, &QNetworkAccessManager::finished, this, &LoginFragment::onHttpResult);
+        qDebug() << "create request" << endl;
         QNetworkRequest request(QUrl(SERVER_URL + "/api/users/login"));
         request.setHeader(QNetworkRequest::ContentTypeHeader,
                           QStringLiteral("application/json;charset=utf-8"));
+        qDebug() << "request data"<< QJsonDocument(param).toJson(QJsonDocument::Compact) << endl;
         networkManager->post(
             request,
             QJsonDocument(param).toJson(QJsonDocument::Compact)
         );
+        qDebug() << "request send" << endl;
     }
 }
 
 void LoginFragment::onHttpResult(QNetworkReply *reply) {
+    qDebug() << "http finished" << endl;
     if(!reply->error()) {
         QByteArray resp = reply->readAll();
         qDebug() << resp << endl;
@@ -156,7 +163,11 @@ void LoginFragment::onHttpResult(QNetworkReply *reply) {
 }
 
 void LoginFragment::checkData() {
-
+    if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
+        loginButton->setStyleSheet(BUTTON_SOLID);
+    } else {
+        loginButton->setStyleSheet(BUTTON_DISABLED);
+    }
 }
 
 void LoginFragment::onBackPressed() {
