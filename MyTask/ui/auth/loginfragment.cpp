@@ -32,7 +32,6 @@ LoginFragment::LoginFragment() {
     QVBoxLayout *backContainer = new QVBoxLayout;
     QSvgButton *backImage = new QSvgButton(":/resc/resc/arrow_back.svg", QSize(24,24));
 
-
     QVBoxLayout *startVerticalContent = new QVBoxLayout;
     QLabel *title = new QLabel("Вход в приложение");
     QLabel *subtitle = new QLabel("Не сообщяйте никому свои данные для авторизации.");

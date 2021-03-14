@@ -92,6 +92,32 @@ namespace styles{
             "background-color:"+COLOR_BORDER+";"
             "}";
 
+    static const QString BUTTON_PROFILE =
+            "QPushButton {"
+            "color: "+COLOR_PRIMARY+";"
+            "background-color:"+COLOR_BACKGROUND+";"
+            "border:1px solid "+COLOR_BORDER+";"
+            "padding:8px;"
+            "border-radius:8px;"
+            "font-size:16px;"
+            "}"
+            "QPushButton:hover {"
+            "background-color:"+COLOR_BORDER+";"
+            "}";
+
+    static const QString BUTTON_PROFILE_RED =
+            "QPushButton {"
+            "color: "+COLOR_TEXT_RED+";"
+            "background-color:"+COLOR_BACKGROUND+";"
+            "border:1px solid "+COLOR_BORDER+";"
+            "padding:8px;"
+            "border-radius:8px;"
+            "font-size:16px;"
+            "}"
+            "QPushButton:hover {"
+            "background-color:"+COLOR_BORDER+";"
+            "}";
+
     static const QString EDIT_TEXT =
             "border: 1px solid "+COLOR_BORDER+";"
             "color: "+COLOR_TEXT_PRIMARY+";"
