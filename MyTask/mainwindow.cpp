@@ -19,10 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
                     this->factory
         );
 
-        QString mainStyle = "QWidget {"
+        QString mainStyle = "QWidget#window {"
                             "background-color:#EFF5FC;"
                             "}";
         container->setStyleSheet(mainStyle);
+        container->setObjectName("window");
 
         this->setWindowTitle("MyTask");
         this->setWindowIcon(QIcon(":/resc/resc/icon.svg"));

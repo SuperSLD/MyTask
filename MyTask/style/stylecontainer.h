@@ -127,7 +127,20 @@ namespace styles{
             "padding:8px;";
 
     static const QString BACK_WHITE =
-            "background-color:"+COLOR_BACKGROUND+";";
+            "QFrame#fragment {"
+            "background-color:"+COLOR_BACKGROUND+";"
+                                                 "}";
+
+    static const QString DESK_WIDGET =
+            "QFrame#desk {"
+            "background-color:"+COLOR_BACKGROUND+";"
+            "border:1px solid "+COLOR_BORDER+";"
+            "font-size:16px;"
+            "border-radius:8px;"
+            "}"
+            "QFrame#desk:hover {"
+            "background-color:"+COLOR_BORDER+";"
+            "}";
 };
 
 

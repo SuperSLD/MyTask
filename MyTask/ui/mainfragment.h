@@ -3,17 +3,39 @@
 
 #include <common/base/basefragment.h>
 
+#include <QLabel>
 #include <QNetworkAccessManager>
-
+#include <QNetworkReply>
+#include <QVBoxLayout>
+#include <models/deskmodel.h>
 
 class MainFragment: public BaseFragment {
     Q_OBJECT
 private:
     QNetworkAccessManager *networkManager;
+    QString token;
+    QString lastRequest;
 
+    QList<DeskModel> deskList;
+    QLabel *userName;
+
+    QVBoxLayout *start;
+    QVBoxLayout *end;
+
+    const QString EXIT = "req_exit";
+    const QString LIST = "req_list";
 public:
     MainFragment();
     ~MainFragment();
+
+    void loadData();
+    void parseDeskList(QJsonArray items);
+public slots:
+    void onExit();
+    void onAdd();
+    void onInvite();
+
+    void onHttpResult(QNetworkReply *reply);
 };
 
 #endif // MAINFRAGMENT_H

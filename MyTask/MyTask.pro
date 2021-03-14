@@ -26,6 +26,11 @@ SOURCES += \
     common/navigator.cpp \
     main.cpp \
     mainwindow.cpp \
+    models/basemodel.cpp \
+    models/cardmodel.cpp \
+    models/checkboxmodel.cpp \
+    models/deskmodel.cpp \
+    models/usermodel.cpp \
     screensfactory.cpp \
     style/stylecontainer.cpp \
     ui/auth/loginfragment.cpp \
@@ -33,6 +38,7 @@ SOURCES += \
     ui/auth/startfragment.cpp \
     ui/mainfragment.cpp \
     ui/splashfragment.cpp \
+    ui/view/deskwidget.cpp \
     ui/view/qsvgbutton.cpp
 
 HEADERS += \
@@ -40,6 +46,11 @@ HEADERS += \
     common/base/basescreensfactory.h \
     common/navigator.h \
     mainwindow.h \
+    models/basemodel.h \
+    models/cardmodel.h \
+    models/checkboxmodel.h \
+    models/deskmodel.h \
+    models/usermodel.h \
     screensfactory.h \
     style/stylecontainer.h \
     ui/auth/loginfragment.h \
@@ -47,6 +58,7 @@ HEADERS += \
     ui/auth/startfragment.h \
     ui/mainfragment.h \
     ui/splashfragment.h \
+    ui/view/deskwidget.h \
     ui/view/qsvgbutton.h
 
 # Default rules for deployment.
