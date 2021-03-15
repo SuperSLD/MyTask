@@ -11,11 +11,15 @@ using namespace styles;
 #include <QScrollBar>
 #include <QSettings>
 #include <QCheckBox>
+#include <QJsonDocument>
+#include <QMessageBox>
 
 #include <models/cardmodel.h>
 
+#include <ui/view/boxid.h>
 #include <ui/view/linewidget.h>
 #include <ui/view/qsvgbutton.h>
+#include <QNetworkAccessManager>
 
 #include <models/deskmodel.h>
 using namespace screens;
@@ -81,6 +85,7 @@ DeskFragment::DeskFragment() {
     addButton->setStyleSheet(BUTTON_SOLID);
     buttonContainer->addWidget(usersButton);
     buttonContainer->addWidget(addButton);
+    connect(addButton, &QPushButton::clicked, this, &DeskFragment::onCreateCard);
 
     infoContainer->setAlignment(Qt::AlignTop);
     infoContainer->addLayout(titleContainer);
@@ -96,6 +101,9 @@ DeskFragment::DeskFragment() {
     this->setLayout(mainHLayout);
     this->setStyleSheet(BACK_WHITE);
     this->setObjectName("fragment");
+
+    networkManager = new QNetworkAccessManager();
+    connect(networkManager, &QNetworkAccessManager::finished, this, &DeskFragment::onHttpResult);
 }
 
 DeskFragment::~DeskFragment() {
@@ -103,11 +111,12 @@ DeskFragment::~DeskFragment() {
     delete users;
     delete progress;
     delete description;
+    delete networkManager;
 }
 
 void DeskFragment::setData(BaseModel *model) {
     DeskModel *desk = dynamic_cast<DeskModel*>(model);
-
+    this->model = desk;
     titleLabel->setText(desk->title);
     description->setText(desk->description);
     users->setText(QString::number(desk->users.length()) + " участников");
@@ -140,28 +149,100 @@ void DeskFragment::setData(BaseModel *model) {
         cardContainer->addWidget(cardTitle);
         cardContainer->addWidget(cardDescription);
 
-        /*
         if (card.type == "checkbox") {
             QFrame *checkBoxContainer = new QFrame;
             QVBoxLayout *checkboxLayout = new QVBoxLayout;
             foreach (CheckBoxModel box, card.checkbox) {
-                QCheckBox *checkboxWidget = new QCheckBox(box.title);
+                QHBoxLayout *checkboxSmal = new QHBoxLayout;
+                QLabel *checkTitle = new QLabel(box.title);
+                BoxId *checkboxWidget = new BoxId(box.id);
+                checkboxSmal->addWidget(checkboxWidget);
                 checkboxWidget->setChecked(box.checked);
                 checkboxWidget->setStyleSheet(TEXT_DARK_LABLE);
                 checkboxWidget->setContentsMargins(0,4,0,0);
-                checkboxWidget->setMinimumHeight(24);
 
-                checkboxLayout->addWidget(checkboxWidget);
+                connect(checkboxWidget, &BoxId::clickCheckbox, this, &DeskFragment::clickBox);
+                checkTitle->setWordWrap(true);
+                checkTitle->setStyleSheet(TEXT_DARK_LABLE);
+
+                checkboxSmal->setAlignment(Qt::AlignLeft|Qt::AlignTop);
+                //checkboxSmal.setAlignment(Qt::Ali)
+                checkboxSmal->addWidget(checkboxWidget);
+                checkboxSmal->addWidget(checkTitle);
+                checkboxLayout->addLayout(checkboxSmal);
             }
             checkBoxContainer->setLayout(checkboxLayout);
             cardContainer->addWidget(checkBoxContainer);
-        }*/
+        }
 
         cards->addLayout(cardContainer);
         cards->addWidget(new LineWidget);
     }
 }
 
+void DeskFragment::onCheckCliced() {
+
+}
+
 void DeskFragment::onBackPressed() {
     back();
+}
+
+void DeskFragment::onCreateCard() {
+    navigateWhithData(ADD_CARD_TAG, this->model);
+}
+
+void DeskFragment::loadData() {
+    QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/mainPage"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      QStringLiteral("application/json;charset=utf-8"));
+    request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
+    QNetworkReply* reply = networkManager->get(
+        request
+    );
+    reply->setProperty("type", LOAD_DATA);
+}
+
+void DeskFragment::clickBox(QString id) {
+    QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/checkbox/" + id));
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      QStringLiteral("application/json;charset=utf-8"));
+    request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
+    networkManager->get(
+        request
+    );
+}
+
+void DeskFragment::onHttpResult(QNetworkReply *reply) {
+    QString type = reply->property("type").toString();
+    if(!reply->error()) {
+        QByteArray resp = reply->readAll();
+        qDebug() << resp << endl;
+        QJsonDocument doc = QJsonDocument::fromJson(resp);
+        QJsonObject obj;
+        if(!doc.isNull()) {
+            if(doc.isObject()) {
+                obj = doc.object();
+                qDebug() << obj["success"].toBool() << endl;
+            }
+            else {
+                qDebug() << "Document is not an object" << endl;
+            }
+        } else {
+            qDebug() << "Invalid JSON...\n" << endl;
+        }
+        if (obj["success"].toBool()) {
+            if (type == LOAD_DATA) {
+                setData(new DeskModel(obj));
+
+            }
+        } else {
+            qDebug("login error");
+            QMessageBox::warning(this, "Ошибка", obj["message"].toString());
+        }
+    } else {
+        QMessageBox::warning(this, "Ошибка",
+            "При подключениии произошла ошибка.\n"        );
+    }
+    reply->deleteLater();
 }

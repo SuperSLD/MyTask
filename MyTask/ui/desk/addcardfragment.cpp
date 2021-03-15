@@ -1,22 +1,20 @@
-#include "adddeskfragment.h"
+#include "addcardfragment.h"
+
+#include <QLabel>
+#include <QSettings>
+#include <QVBoxLayout>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <ui/view/qsvgbutton.h>
+#include <QMessageBox>
+#include <QNetworkReply>
 
 #include "style/stylecontainer.h"
 using namespace styles;
 #include "screensfactory.h"
-
-#include <QLabel>
-#include <QNetworkAccessManager>
-#include <QPlainTextEdit>
-#include <QVBoxLayout>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QSettings>
-#include <QMessageBox>
-
-#include <ui/view/qsvgbutton.h>
 using namespace screens;
 
-AddDeskFragment::AddDeskFragment() {
+AddCardFragment::AddCardFragment() {
     QSettings *settings = new QSettings("settings.ini", QSettings::IniFormat);
     token = settings->value("token", "").toString();
 
@@ -25,16 +23,16 @@ AddDeskFragment::AddDeskFragment() {
 
     QHBoxLayout *titleContainer = new QHBoxLayout;
     QSvgButton *backButton = new QSvgButton(":/resc/resc/arrow_back.svg", QSize(24,24));
-    QLabel *titleLabel = new QLabel("Создание доски");
+    QLabel *titleLabel = new QLabel("Добавление карточки");
 
     QHBoxLayout *buttoContainer = new QHBoxLayout;
-    createButton = new QPushButton("Создать доску");
+    createButton = new QPushButton("Добавить карточку");
 
     titleEdit = new QLineEdit;
     descriptionEdit = new QPlainTextEdit;
 
     titleLabel->setStyleSheet(TITLE_LABLE);
-    connect(backButton, &QSvgButton::clicked, this, &AddDeskFragment::onBackPressed);
+    connect(backButton, &QSvgButton::clicked, this, &AddCardFragment::onBackPressed);
     titleContainer->addWidget(backButton);
     titleContainer->addWidget(titleLabel);
     titleContainer->setContentsMargins(0,24,0,16);
@@ -42,18 +40,18 @@ AddDeskFragment::AddDeskFragment() {
 
     titleEdit->setMaximumWidth(574);
     titleEdit->setStyleSheet(EDIT_TEXT);
-    titleEdit->setPlaceholderText("Название доски");
+    titleEdit->setPlaceholderText("Название карточки");
     descriptionEdit->setMaximumWidth(574);
     descriptionEdit->setStyleSheet(EDIT_TEXT);
-    descriptionEdit->setPlaceholderText("Описание доски");
+    descriptionEdit->setPlaceholderText("Описание карточки");
     descriptionEdit->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
-    connect(titleEdit, &QLineEdit::textChanged, this, &AddDeskFragment::checkData);
-    connect(descriptionEdit, &QPlainTextEdit::textChanged, this, &AddDeskFragment::checkData);
+    connect(titleEdit, &QLineEdit::textChanged, this, &AddCardFragment::checkData);
+    connect(descriptionEdit, &QPlainTextEdit::textChanged, this, &AddCardFragment::checkData);
 
     createButton->setStyleSheet(BUTTON_SOLID);
     createButton->setMaximumWidth(335);
     createButton->setMinimumWidth(335);
-    connect(createButton, &QPushButton::clicked, this, &AddDeskFragment::onCreatePressed);
+    connect(createButton, &QPushButton::clicked, this, &AddCardFragment::onCreatePressed);
     buttoContainer->addWidget(createButton);
     buttoContainer->setAlignment(Qt::AlignRight);
 
@@ -72,17 +70,17 @@ AddDeskFragment::AddDeskFragment() {
     checkData();
 
     networkManager = new QNetworkAccessManager();
-    connect(networkManager, &QNetworkAccessManager::finished, this, &AddDeskFragment::onHttpResult);
+    connect(networkManager, &QNetworkAccessManager::finished, this, &AddCardFragment::onHttpResult);
 }
 
-AddDeskFragment::~AddDeskFragment() {
+AddCardFragment::~AddCardFragment() {
     delete titleEdit;
     delete descriptionEdit;
     delete createButton;
-    networkManager->clearAccessCache();
+    //delete networkManager;
 }
 
-void AddDeskFragment::checkData() {
+void AddCardFragment::checkData() {
     if (titleEdit->text().length() > 2 && descriptionEdit->toPlainText().length() > 10) {
         createButton->setStyleSheet(BUTTON_SOLID);
     } else {
@@ -90,16 +88,23 @@ void AddDeskFragment::checkData() {
     }
 }
 
-void AddDeskFragment::onBackPressed() {
+void AddCardFragment::setData(BaseModel *model) {
+    DeskModel *desk = dynamic_cast<DeskModel*>(model);
+    this->model = desk;
+}
+
+void AddCardFragment::onBackPressed() {
     back();
 }
 
-void AddDeskFragment::onCreatePressed() {
+void AddCardFragment::onCreatePressed() {
     if (titleEdit->text().length() > 2 && descriptionEdit->toPlainText().length() > 10) {
         QJsonObject param;
+        param.insert("desk_id", this->model->id);
         param.insert("title", titleEdit->text());
         param.insert("description", descriptionEdit->toPlainText());
-        QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/create"));
+        param.insert("type_card", "simple");
+        QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/createCard"));
         request.setHeader(QNetworkRequest::ContentTypeHeader,
                           QStringLiteral("application/json;charset=utf-8"));
         request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
@@ -110,7 +115,7 @@ void AddDeskFragment::onCreatePressed() {
     }
 }
 
-void AddDeskFragment::onHttpResult(QNetworkReply *reply) {
+void AddCardFragment::onHttpResult(QNetworkReply *reply) {
     if(!reply->error()) {
         QByteArray resp = reply->readAll();
         qDebug() << resp << endl;

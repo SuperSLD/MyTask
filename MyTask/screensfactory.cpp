@@ -7,6 +7,7 @@
 #include <ui/auth/registrationfragment.h>
 #include <ui/auth/startfragment.h>
 
+#include <ui/desk/addcardfragment.h>
 #include <ui/desk/adddeskfragment.h>
 #include <ui/desk/deskfragment.h>
 
@@ -36,6 +37,8 @@ BaseFragment* ScreensFactory::create(QString tag) {
         return new AddDeskFragment;
     } else if (tag == DESK_TAG) {
         return new DeskFragment;
+    } else if (tag == ADD_CARD_TAG) {
+        return new AddCardFragment;
     } else {
         return nullptr;
     }
