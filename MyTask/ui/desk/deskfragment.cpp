@@ -140,6 +140,7 @@ void DeskFragment::setData(BaseModel *model) {
         cardContainer->addWidget(cardTitle);
         cardContainer->addWidget(cardDescription);
 
+        /*
         if (card.type == "checkbox") {
             QFrame *checkBoxContainer = new QFrame;
             QVBoxLayout *checkboxLayout = new QVBoxLayout;
@@ -154,7 +155,7 @@ void DeskFragment::setData(BaseModel *model) {
             }
             checkBoxContainer->setLayout(checkboxLayout);
             cardContainer->addWidget(checkBoxContainer);
-        }
+        }*/
 
         cards->addLayout(cardContainer);
         cards->addWidget(new LineWidget);
