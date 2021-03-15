@@ -15,3 +15,13 @@ DeskModel::DeskModel(QJsonObject obj) {
         this->cards.append(CardModel(cardValue.toObject()));
     }
 }
+
+QString DeskModel::getProgress() {
+    int summCount = 0;
+    int checkedCount = 0;
+    foreach (CardModel card, cards) {
+        summCount += card.getSummCount();
+        checkedCount += card.getCheckedCount();
+    }
+    return QString::number(checkedCount) + "/" + QString::number(summCount);
+}

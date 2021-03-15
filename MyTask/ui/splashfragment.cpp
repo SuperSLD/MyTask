@@ -26,7 +26,8 @@ SplashFragment::SplashFragment() {
     mainVLayout->addLayout(mainHLayout);
     mainVLayout->setAlignment(Qt::AlignCenter);
 
-    this->setStyleSheet(GLOBAL_BACK_WHITE);
+    this->setStyleSheet(BACK_WHITE);
+    this->setObjectName("fragment");
     this->setLayout(mainVLayout);
 
     QTimer::singleShot(3000, this, SLOT(openStartScreen()));

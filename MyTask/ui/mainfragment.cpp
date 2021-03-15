@@ -38,14 +38,17 @@ MainFragment::MainFragment() {
 
     QScrollArea *deskScrollArea = new QScrollArea;
     deskScrollArea->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    //deskScrollArea->setMaximumWidth(820);
     deskScrollArea->setMinimumWidth(820);
     deskScrollArea->setFrameShape(QFrame::NoFrame);
     QWidget *scrolContainer = new QWidget;
-    scrolContainer->setObjectName("scrollArea");
+    scrolContainer->setObjectName("container");
+    scrolContainer->setStyleSheet(GLOBAL_BACK_WHITE);
+    deskScrollArea->setStyleSheet(SCROL_BAR);
     QHBoxLayout *deskContainer = new QHBoxLayout;
     start = new QVBoxLayout;
+    start->setAlignment(Qt::AlignTop);
     end = new QVBoxLayout;
+    end->setAlignment(Qt::AlignTop);
     deskContainer->addLayout(start);
     deskContainer->addLayout(end);
     scrolContainer->setLayout(deskContainer);
@@ -182,10 +185,18 @@ void MainFragment::parseDeskList(QJsonArray items) {
     foreach(QJsonValue deskValue, items) {
         deskList.append(DeskModel(deskValue.toObject()));
         DeskWidget *deskWidget = new DeskWidget(deskList.last());
-        if (deskList.size() % 2 == 1) {
+        if (getCardH(start) <= getCardH(end)) {
             start->addWidget(deskWidget);
         } else {
             end->addWidget(deskWidget);
         }
     }
+}
+
+int MainFragment::getCardH(QVBoxLayout *container) {
+    int h = 0;
+    for (int i = 0; i < container->count(); i++) {
+        h += container->itemAt(i)->widget()->geometry().height();
+    }
+    return h;
 }

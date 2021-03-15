@@ -19,6 +19,8 @@ public:
     QString createdAt;
     QList<UserModel> users;
     QList<CardModel> cards;
+
+    QString getProgress();
 };
 
 #endif // DESKMODEL_H

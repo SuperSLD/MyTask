@@ -16,6 +16,9 @@ public:
     QString description;
     QString type;
     QList<CheckBoxModel> checkbox;
+
+    int getCheckedCount();
+    int getSummCount();
 };
 
 #endif // CARDMODEL_H

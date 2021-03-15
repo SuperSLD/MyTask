@@ -13,3 +13,23 @@ CardModel::CardModel(QJsonObject obj) {
         }
     }
 }
+
+int CardModel::getCheckedCount() {
+    int checked = 0;
+    if (type == "checkbox") {
+        foreach (CheckBoxModel box, checkbox) {
+            if (box.checked) {
+                checked++;
+            }
+        }
+    }
+    return checked;
+}
+
+int CardModel::getSummCount() {
+    if (type == "checkbox") {
+        return this->checkbox.length();
+    } else {
+        return 0;
+    }
+}

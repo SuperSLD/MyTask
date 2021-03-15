@@ -24,12 +24,16 @@ private:
 
     const QString EXIT = "req_exit";
     const QString LIST = "req_list";
+
+    void loadData();
+    void parseDeskList(QJsonArray items);
+
+    int getCardH(QVBoxLayout *container);
+
 public:
     MainFragment();
     ~MainFragment();
 
-    void loadData();
-    void parseDeskList(QJsonArray items);
 public slots:
     void onExit();
     void onAdd();

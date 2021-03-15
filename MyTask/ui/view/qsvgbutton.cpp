@@ -10,7 +10,8 @@ QSvgButton::QSvgButton(QString path, QSize size) {
     image->setMinimumSize(size);
     mainContainer->addWidget(image);
     mainContainer->setContentsMargins(0,0,0,0);
-    this->setStyleSheet("border:none; padding:0px;");
+    image->setStyleSheet("background-color:#FFFFFF;");
+    this->setStyleSheet("border:none; padding:0px; background-color:#FFFFFF;");
     this->setMinimumSize(size);
     this->setMaximumSize(size);
     this->setLayout(mainContainer);
