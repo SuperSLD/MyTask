@@ -41,6 +41,7 @@ SOURCES += \
     ui/mainfragment.cpp \
     ui/splashfragment.cpp \
     ui/view/deskwidget.cpp \
+    ui/view/linewidget.cpp \
     ui/view/qsvgbutton.cpp
 
 HEADERS += \
@@ -63,6 +64,7 @@ HEADERS += \
     ui/mainfragment.h \
     ui/splashfragment.h \
     ui/view/deskwidget.h \
+    ui/view/linewidget.h \
     ui/view/qsvgbutton.h
 
 # Default rules for deployment.

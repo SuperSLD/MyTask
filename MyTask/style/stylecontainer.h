@@ -190,11 +190,16 @@ namespace styles{
 
     static const QString TEXT_HINT_18PX_LABLE =
             "color:" + COLOR_TEXT_HINT + ";"
-            "font-size:16px;";
+            "font-size:18px;";
 
     static const QString TEXT_PRIMARY_16PX_LABLE =
             "color:" + COLOR_PRIMARY + ";"
             "font-size:16px;";
+
+    static const QString TEXT_DARK_18PX_LABLE =
+            "color:" + COLOR_TEXT_PRIMARY + ";"
+            "font-size:18px;";
+
 };
 
 

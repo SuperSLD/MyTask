@@ -10,7 +10,11 @@ using namespace styles;
 #include <QVBoxLayout>
 #include <QScrollBar>
 #include <QSettings>
+#include <QCheckBox>
 
+#include <models/cardmodel.h>
+
+#include <ui/view/linewidget.h>
 #include <ui/view/qsvgbutton.h>
 
 #include <models/deskmodel.h>
@@ -86,7 +90,7 @@ DeskFragment::DeskFragment() {
     infoContainer->addLayout(buttonContainer);
 
     mainHLayout->addLayout(infoContainer);
-    mainHLayout->addWidget(scrolContainer);
+    mainHLayout->addWidget(deskScrollArea);
     mainHLayout->setAlignment(Qt::AlignHCenter);
 
     this->setLayout(mainHLayout);
@@ -110,10 +114,51 @@ void DeskFragment::setData(BaseModel *model) {
     progress->setText(desk->getProgress() + " пунктов выполнено");
 
     QLabel *scrollTitle = new QLabel("Карточки:");
+    LineWidget *line = new LineWidget;
 
     scrollTitle->setStyleSheet(TEXT_HINT_18PX_LABLE);
 
     cards->addWidget(scrollTitle);
+    cards->addWidget(line);
+
+    QList<CardModel> cardList = desk->cards;
+    foreach (CardModel card, cardList) {
+        QVBoxLayout *cardContainer = new QVBoxLayout;
+        cardContainer->setContentsMargins(24,24,24,24);
+        QLabel *cardTitle = new QLabel(card.title);
+        cardTitle->setMinimumWidth(396-24-24);
+        cardTitle->setMaximumWidth(396-24-24);
+        cardTitle->setWordWrap(true);
+        cardTitle->setStyleSheet(TEXT_DARK_18PX_LABLE);
+
+        QLabel *cardDescription = new QLabel(card.description);
+        cardDescription->setMinimumWidth(396-24-24);
+        cardDescription->setMaximumWidth(396-24-24);
+        cardDescription->setWordWrap(true);
+        cardDescription->setStyleSheet(TEXT_DARK_LABLE);
+
+        cardContainer->addWidget(cardTitle);
+        cardContainer->addWidget(cardDescription);
+
+        if (card.type == "checkbox") {
+            QFrame *checkBoxContainer = new QFrame;
+            QVBoxLayout *checkboxLayout = new QVBoxLayout;
+            foreach (CheckBoxModel box, card.checkbox) {
+                QCheckBox *checkboxWidget = new QCheckBox(box.title);
+                checkboxWidget->setChecked(box.checked);
+                checkboxWidget->setStyleSheet(TEXT_DARK_LABLE);
+                checkboxWidget->setContentsMargins(0,4,0,0);
+                checkboxWidget->setMinimumHeight(24);
+
+                checkboxLayout->addWidget(checkboxWidget);
+            }
+            checkBoxContainer->setLayout(checkboxLayout);
+            cardContainer->addWidget(checkBoxContainer);
+        }
+
+        cards->addLayout(cardContainer);
+        cards->addWidget(new LineWidget);
+    }
 }
 
 void DeskFragment::onBackPressed() {
