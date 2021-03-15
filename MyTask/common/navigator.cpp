@@ -28,6 +28,7 @@ Navigator::~Navigator() {
 void Navigator::navigateTo(QString tag) {
     qDebug("Navigator navigateTo");
     BaseFragment *newFragment = this->screensFactory->create(tag);
+    stack.last()->onPause();
     disconnectFragment(stack.last());
     connectFragment(newFragment);
     stack.append(newFragment);
@@ -41,6 +42,7 @@ void Navigator::back() {
     delete stack.last();
     stack.removeLast();
     connectFragment(stack.last());
+    stack.last()->onResume();
     currentContainer->setCurrentWidget(stack.last());
 }
 
@@ -70,8 +72,18 @@ void Navigator::newRootScreen(QString tag) {
     stack.append(newFragment);
 }
 
+void Navigator::backWhithData(BaseModel* model) {
+    back();
+    stack.last()->setData(model);
+}
+
+void Navigator::navigateWhithData(QString tag, BaseModel* model) {
+    navigateTo(tag);
+    stack.last()->setData(model);
+}
+
 BaseFragment* Navigator::getStartScreen() {
-    return createAndConnect(SPLASH_TAG);
+    return createAndConnect(this->screensFactory->createStart());
 }
 
 void Navigator::connectFragment(BaseFragment *fragment) {
@@ -80,6 +92,8 @@ void Navigator::connectFragment(BaseFragment *fragment) {
     connect(fragment, &BaseFragment::replace, this, &Navigator::replace);
     connect(fragment, &BaseFragment::navigateTo, this, &Navigator::navigateTo);
     connect(fragment, &BaseFragment::newRootScreen, this, &Navigator::newRootScreen);
+    connect(fragment, &BaseFragment::backWhithData, this, &Navigator::backWhithData);
+    connect(fragment, &BaseFragment::navigateWhithData, this, &Navigator::navigateWhithData);
 }
 
 void Navigator::disconnectFragment(BaseFragment *fragment) {
@@ -88,6 +102,8 @@ void Navigator::disconnectFragment(BaseFragment *fragment) {
     disconnect(fragment, &BaseFragment::replace, this, &Navigator::replace);
     disconnect(fragment, &BaseFragment::navigateTo, this, &Navigator::navigateTo);
     disconnect(fragment, &BaseFragment::newRootScreen, this, &Navigator::newRootScreen);
+    disconnect(fragment, &BaseFragment::backWhithData, this, &Navigator::backWhithData);
+    disconnect(fragment, &BaseFragment::navigateWhithData, this, &Navigator::navigateWhithData);
 }
 
 BaseFragment* Navigator::createAndConnect(QString tag) {

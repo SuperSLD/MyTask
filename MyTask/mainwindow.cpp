@@ -39,19 +39,3 @@ MainWindow::~MainWindow() {
     delete navigator;
     delete factory;
 }
-
-void MainWindow::back() {
-    this->navigator->back();
-}
-
-void MainWindow::navigateTo(QString tag) {
-    this->navigator->navigateTo(tag);
-}
-
-void MainWindow::replace(QString tag) {
-    this->navigator->replace(tag);
-}
-
-void MainWindow::newRootScreen(QString tag) {
-    //this->navigator->
-}

@@ -7,7 +7,6 @@
 #include <QStackedWidget>
 #include <QLinkedList>
 
-
 /**
  * @brief The Navigator class
  *
@@ -99,6 +98,22 @@ public slots:
      * всей цепочки экранов.
      */
     void newRootScreen(QString tag);
+
+    /**
+     * @brief backWhithData
+     * @param model
+     *
+     * Тот же бэк но с данными.
+     */
+    void backWhithData(BaseModel* model);
+
+    /**
+     * @brief navigateWhithData
+     * @param model
+     *
+     * Тот же navigateTo но с данными.
+     */
+    void navigateWhithData(QString tag, BaseModel* model);
 };
 
 #endif // NAVIGATOR_H

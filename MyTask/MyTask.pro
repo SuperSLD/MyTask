@@ -36,6 +36,8 @@ SOURCES += \
     ui/auth/loginfragment.cpp \
     ui/auth/registrationfragment.cpp \
     ui/auth/startfragment.cpp \
+    ui/desk/adddeskfragment.cpp \
+    ui/desk/deskfragment.cpp \
     ui/mainfragment.cpp \
     ui/splashfragment.cpp \
     ui/view/deskwidget.cpp \
@@ -56,6 +58,8 @@ HEADERS += \
     ui/auth/loginfragment.h \
     ui/auth/registrationfragment.h \
     ui/auth/startfragment.h \
+    ui/desk/adddeskfragment.h \
+    ui/desk/deskfragment.h \
     ui/mainfragment.h \
     ui/splashfragment.h \
     ui/view/deskwidget.h \

@@ -29,15 +29,19 @@ private:
     void parseDeskList(QJsonArray items);
 
     int getCardH(QVBoxLayout *container);
+    void clearLayout(QVBoxLayout *container);
 
 public:
     MainFragment();
     ~MainFragment();
 
+    void onResume() override;
 public slots:
     void onExit();
     void onAdd();
     void onInvite();
+
+    void deskSelected(DeskModel* desk);
 
     void onHttpResult(QNetworkReply *reply);
 };

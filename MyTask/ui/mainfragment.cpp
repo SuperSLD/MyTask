@@ -105,6 +105,14 @@ MainFragment::~MainFragment() {
     delete end;
 }
 
+void MainFragment::onResume() {
+    qDebug("main fragment onResume()");
+    clearLayout(start);
+    clearLayout(end);
+    deskList.clear();
+    loadData();
+}
+
 void MainFragment::loadData() {
     QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/mainPage"));
     request.setHeader(QNetworkRequest::ContentTypeHeader,
@@ -129,7 +137,7 @@ void MainFragment::onExit() {
 }
 
 void MainFragment::onAdd() {
-
+    navigateTo(ADD_DESK_TAG);
 }
 
 void MainFragment::onInvite() {
@@ -184,7 +192,8 @@ void MainFragment::onHttpResult(QNetworkReply *reply) {
 void MainFragment::parseDeskList(QJsonArray items) {
     foreach(QJsonValue deskValue, items) {
         deskList.append(DeskModel(deskValue.toObject()));
-        DeskWidget *deskWidget = new DeskWidget(deskList.last());
+        DeskWidget *deskWidget = new DeskWidget(&deskList.last());
+        connect(deskWidget, &DeskWidget::deskSelected, this, &MainFragment::deskSelected);
         if (getCardH(start) <= getCardH(end)) {
             start->addWidget(deskWidget);
         } else {
@@ -199,4 +208,16 @@ int MainFragment::getCardH(QVBoxLayout *container) {
         h += container->itemAt(i)->widget()->geometry().height();
     }
     return h;
+}
+
+void MainFragment::clearLayout(QVBoxLayout *container) {
+    QLayoutItem* item;
+    while ( ( item = container->layout()->takeAt( 0 ) ) != NULL ) {
+        delete item->widget();
+        delete item;
+    }
+}
+
+void MainFragment::deskSelected(DeskModel* desk) {
+    navigateWhithData(DESK_TAG, desk);
 }

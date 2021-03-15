@@ -28,6 +28,16 @@ public:
      */
     virtual BaseFragment* create(QString tag);
 
+    /**
+     * @brief createStart
+     *
+     * Создание стартового окна прпиложения
+     * для навигатора.
+     *
+     * @return стартовое окно приложения.
+     */
+    virtual QString createStart();
+
     //MainWindow *window;
 };
 

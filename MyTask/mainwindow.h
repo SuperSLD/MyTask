@@ -20,10 +20,5 @@ private:
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-    void navigateTo(QString tag);
-    void newRootScreen(QString tag);
-    void back();
-    void replace(QString tag);
 };
 #endif // MAINWINDOW_H

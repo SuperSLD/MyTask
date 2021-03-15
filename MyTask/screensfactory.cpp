@@ -7,6 +7,9 @@
 #include <ui/auth/registrationfragment.h>
 #include <ui/auth/startfragment.h>
 
+#include <ui/desk/adddeskfragment.h>
+#include <ui/desk/deskfragment.h>
+
 using namespace screens;
 
 ScreensFactory::ScreensFactory() {
@@ -29,7 +32,17 @@ BaseFragment* ScreensFactory::create(QString tag) {
         return new RegistrationFragment;
     } else if (tag == MAIN_TAG) {
         return new MainFragment;
+    } else if (tag == ADD_DESK_TAG) {
+        return new AddDeskFragment;
+    } else if (tag == DESK_TAG) {
+        return new DeskFragment;
     } else {
         return nullptr;
     }
 }
+
+QString ScreensFactory::createStart() {
+    return SPLASH_TAG;
+}
+
+

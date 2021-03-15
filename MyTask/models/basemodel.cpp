@@ -4,3 +4,5 @@ BaseModel::BaseModel()
 {
 
 }
+
+void BaseModel::pol() {}
