@@ -20,7 +20,6 @@ void BaseFragment::clearList(QLayout *list) {
         {
             delete child->widget();
         }
-
         delete child;
     }
 }

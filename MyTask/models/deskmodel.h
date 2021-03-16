@@ -21,6 +21,8 @@ public:
     QList<CardModel> cards;
 
     QString getProgress();
+
+    DeskModel* check(QString id);
 };
 
 #endif // DESKMODEL_H

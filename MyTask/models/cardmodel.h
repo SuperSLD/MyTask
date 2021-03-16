@@ -11,6 +11,8 @@ class CardModel
 public:
     CardModel(QJsonObject obj);
 
+    int clickCount = 0;
+
     QString id;
     QString title;
     QString description;
@@ -19,6 +21,8 @@ public:
 
     int getCheckedCount();
     int getSummCount();
+
+    bool check(QString id);
 };
 
 #endif // CARDMODEL_H

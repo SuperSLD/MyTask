@@ -38,14 +38,18 @@ SOURCES += \
     ui/auth/startfragment.cpp \
     ui/desk/addcardfragment.cpp \
     ui/desk/adddeskfragment.cpp \
+    ui/desk/createinvitefragment.cpp \
     ui/desk/deskfragment.cpp \
     ui/desk/userslistfragment.cpp \
+    ui/invite/invitelistfragment.cpp \
     ui/mainfragment.cpp \
     ui/splashfragment.cpp \
     ui/view/boxid.cpp \
     ui/view/deskwidget.cpp \
+    ui/view/invitewidget.cpp \
     ui/view/linewidget.cpp \
-    ui/view/qsvgbutton.cpp
+    ui/view/qsvgbutton.cpp \
+    ui/view/userwidget.cpp
 
 HEADERS += \
     common/base/basefragment.h \
@@ -64,14 +68,18 @@ HEADERS += \
     ui/auth/startfragment.h \
     ui/desk/addcardfragment.h \
     ui/desk/adddeskfragment.h \
+    ui/desk/createinvitefragment.h \
     ui/desk/deskfragment.h \
     ui/desk/userslistfragment.h \
+    ui/invite/invitelistfragment.h \
     ui/mainfragment.h \
     ui/splashfragment.h \
     ui/view/boxid.h \
     ui/view/deskwidget.h \
+    ui/view/invitewidget.h \
     ui/view/linewidget.h \
-    ui/view/qsvgbutton.h
+    ui/view/qsvgbutton.h \
+    ui/view/userwidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

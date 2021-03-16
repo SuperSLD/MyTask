@@ -21,6 +21,7 @@ private:
     QLabel *progress;
 
     const QString LOAD_DATA = "load_data";
+    const QString CHECK = "check";
 
     DeskModel *model;
     QNetworkAccessManager *networkManager;

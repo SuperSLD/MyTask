@@ -9,8 +9,11 @@
 
 #include <ui/desk/addcardfragment.h>
 #include <ui/desk/adddeskfragment.h>
+#include <ui/desk/createinvitefragment.h>
 #include <ui/desk/deskfragment.h>
 #include <ui/desk/userslistfragment.h>
+
+#include <ui/invite/invitelistfragment.h>
 
 using namespace screens;
 
@@ -42,6 +45,10 @@ BaseFragment* ScreensFactory::create(QString tag) {
         return new AddCardFragment;
     } else if (tag == USERS_TAG) {
         return new UsersListFragment;
+    } else if (tag == CREATE_INVITE_TAG) {
+        return new CreateInviteFragment;
+    } else if (tag == INVITE_LIST_TAG) {
+        return new InviteListFragment;
     } else {
         return nullptr;
     }

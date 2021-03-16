@@ -33,3 +33,25 @@ int CardModel::getSummCount() {
         return 0;
     }
 }
+
+bool CardModel::check(QString id) {
+    if (this->type == "checkbox") {
+        foreach (CheckBoxModel box, this->checkbox) {
+            if (box.id == id) {
+                clickCount++;
+                qDebug("box find and check [count = "+QString::number(clickCount).toLatin1()+"]");
+                if (box.checked) {
+                    qDebug("checked");
+                    box.checked = false;
+                } else {
+                    qDebug("unchecked");
+                    box.checked = true;
+                }
+                return true;
+            }
+        }
+        return false;
+    } else {
+        return false;
+    }
+}

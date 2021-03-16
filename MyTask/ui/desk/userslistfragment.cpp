@@ -1,6 +1,7 @@
 #include "userslistfragment.h"
 
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/userwidget.h>
 
 #include <QScrollArea>
 #include <QScrollBar>
@@ -85,7 +86,7 @@ void UsersListFragment::setData(BaseModel *model) {
     this->model = desk;
 
     foreach(UserModel user, desk->users) {
-
+        cards->addWidget(new UserWidget(&user));
     }
 }
 
@@ -94,5 +95,5 @@ void UsersListFragment::onBackPressed() {
 }
 
 void UsersListFragment::onCreateInvite() {
-
+    navigateWhithData(CREATE_INVITE_TAG, model);
 }

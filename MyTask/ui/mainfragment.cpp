@@ -141,7 +141,7 @@ void MainFragment::onAdd() {
 }
 
 void MainFragment::onInvite() {
-
+    navigateTo(INVITE_LIST_TAG);
 }
 
 void MainFragment::onHttpResult(QNetworkReply *reply) {

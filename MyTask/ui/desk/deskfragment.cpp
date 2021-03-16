@@ -155,6 +155,9 @@ void DeskFragment::setData(BaseModel *model) {
         if (card.type == "checkbox") {
             QFrame *checkBoxContainer = new QFrame;
             QVBoxLayout *checkboxLayout = new QVBoxLayout;
+            checkBoxContainer->setMinimumWidth(396-24-24);
+            checkBoxContainer->setMaximumWidth(396-24-24);
+            checkboxLayout->setContentsMargins(0,0,0,0);
             foreach (CheckBoxModel box, card.checkbox) {
                 QHBoxLayout *checkboxSmal = new QHBoxLayout;
                 QLabel *checkTitle = new QLabel(box.title);
@@ -162,18 +165,18 @@ void DeskFragment::setData(BaseModel *model) {
                 checkboxSmal->addWidget(checkboxWidget);
                 checkboxWidget->setChecked(box.checked);
                 checkboxWidget->setStyleSheet(TEXT_DARK_LABLE);
-                checkboxWidget->setContentsMargins(0,4,0,0);
+                checkboxWidget->setMaximumWidth(16);
+                checkboxWidget->setContentsMargins(0,0,0,0);
 
                 connect(checkboxWidget, &BoxId::clickCheckbox, this, &DeskFragment::clickBox);
                 checkTitle->setWordWrap(true);
                 checkTitle->setStyleSheet(TEXT_DARK_LABLE);
 
-                checkboxSmal->setAlignment(Qt::AlignLeft|Qt::AlignTop);
-                //checkboxSmal.setAlignment(Qt::Ali)
                 checkboxSmal->addWidget(checkboxWidget);
                 checkboxSmal->addWidget(checkTitle);
                 checkboxLayout->addLayout(checkboxSmal);
             }
+            //checkboxLayout->setAlignment(Qt::AlignCenter);
             checkBoxContainer->setLayout(checkboxLayout);
             cardContainer->addWidget(checkBoxContainer);
         }
@@ -184,7 +187,7 @@ void DeskFragment::setData(BaseModel *model) {
 }
 
 void DeskFragment::onCheckCliced() {
-    navigateTo(USERS_TAG);
+    navigateWhithData(USERS_TAG, this->model);
 }
 
 void DeskFragment::onBackPressed() {
@@ -215,9 +218,11 @@ void DeskFragment::clickBox(QString id) {
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/json;charset=utf-8"));
     request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
-    networkManager->get(
+    QNetworkReply* reply = networkManager->get(
         request
     );
+    reply->setProperty("type", CHECK);
+    reply->setProperty("id", id);
 }
 
 void DeskFragment::onHttpResult(QNetworkReply *reply) {
@@ -241,7 +246,9 @@ void DeskFragment::onHttpResult(QNetworkReply *reply) {
         if (obj["success"].toBool()) {
             if (type == LOAD_DATA) {
                 setData(new DeskModel(obj["data"].toObject()));
-
+            } else if (type == CHECK) {
+                model->check(reply->property("id").toString());
+                progress->setText(model->getProgress() + " пунктов выполнено");
             }
         } else {
             qDebug("login error");
@@ -249,7 +256,8 @@ void DeskFragment::onHttpResult(QNetworkReply *reply) {
         }
     } else {
         QMessageBox::warning(this, "Ошибка",
-            "При подключениии произошла ошибка.\n"        );
+            "При подключениии произошла ошибка.\n"
+        );
     }
     reply->deleteLater();
 }

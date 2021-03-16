@@ -25,3 +25,12 @@ QString DeskModel::getProgress() {
     }
     return QString::number(checkedCount) + "/" + QString::number(summCount);
 }
+
+DeskModel* DeskModel::check(QString id) {
+    foreach(CardModel card, cards) {
+        if (card.check(id)) {
+            break;
+        }
+    }
+    return this;
+}
