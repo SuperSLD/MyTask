@@ -39,6 +39,7 @@ SOURCES += \
     ui/desk/addcardfragment.cpp \
     ui/desk/adddeskfragment.cpp \
     ui/desk/deskfragment.cpp \
+    ui/desk/userslistfragment.cpp \
     ui/mainfragment.cpp \
     ui/splashfragment.cpp \
     ui/view/boxid.cpp \
@@ -64,6 +65,7 @@ HEADERS += \
     ui/desk/addcardfragment.h \
     ui/desk/adddeskfragment.h \
     ui/desk/deskfragment.h \
+    ui/desk/userslistfragment.h \
     ui/mainfragment.h \
     ui/splashfragment.h \
     ui/view/boxid.h \

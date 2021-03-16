@@ -87,6 +87,7 @@ DeskFragment::DeskFragment() {
     buttonContainer->addWidget(usersButton);
     buttonContainer->addWidget(addButton);
     connect(addButton, &QPushButton::clicked, this, &DeskFragment::onCreateCard);
+    connect(usersButton, &QPushButton::clicked, this, &DeskFragment::onCheckCliced);
 
     infoContainer->setAlignment(Qt::AlignTop);
     infoContainer->addLayout(titleContainer);
@@ -183,7 +184,7 @@ void DeskFragment::setData(BaseModel *model) {
 }
 
 void DeskFragment::onCheckCliced() {
-
+    navigateTo(USERS_TAG);
 }
 
 void DeskFragment::onBackPressed() {
