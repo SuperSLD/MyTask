@@ -32,6 +32,8 @@ public:
     DeskFragment();
     ~DeskFragment();
 
+    void onResume() override;
+
     void loadData();
     void setData(BaseModel* model) override;
 public slots:

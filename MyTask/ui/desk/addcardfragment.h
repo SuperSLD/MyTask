@@ -7,8 +7,11 @@
 #include <QNetworkAccessManager>
 #include <QPlainTextEdit>
 #include <QPushButton>
+#include <QStackedWidget>
 
 #include <models/deskmodel.h>
+
+#include <ui/view/qsvgbutton.h>
 
 class AddCardFragment: public BaseFragment {
     Q_OBJECT
@@ -16,10 +19,24 @@ private:
     QString token;
 
     DeskModel *model;
+    QString currentType = "simple";
 
     QLineEdit *titleEdit;
+    QLineEdit *cardTitleEdit;
+
     QPlainTextEdit *descriptionEdit;
     QPushButton *createButton;
+    QPushButton *createBoxButton;
+
+    QSvgButton *addBoxTitleButton;
+
+    QVBoxLayout *titleWidgetList;
+    QList<QString> titleList;
+
+    QPushButton *simpleButtom;
+    QPushButton *boxButton;
+    QStackedWidget *stack;
+
     QNetworkAccessManager *networkManager;
 
 public:
@@ -31,6 +48,10 @@ public slots:
     void onBackPressed();
     void onCreatePressed();
     void onHttpResult(QNetworkReply *reply);
+    void onBoxTitleAdd();
+
+    void onText();
+    void onBox();
 
     /**
      * @brief checkData
@@ -39,6 +60,7 @@ public slots:
      * на корректность.
      */
     void checkData();
+    void checkBoxTitle();
 };
 
 #endif // ADDCARDFRAGMENT_H

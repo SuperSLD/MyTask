@@ -2,10 +2,15 @@
 #define BASEFRAGMENT_H
 
 #include <QFrame>
+#include <QVBoxLayout>
 #include <QWidget>
 
 #include <models/basemodel.h>
-
+/**
+ * @brief The BaseFragment class
+ *
+ * Базовый фрагмент приложения.
+ */
 class BaseFragment: public QFrame {
     Q_OBJECT
 
@@ -19,6 +24,8 @@ signals:
     void newRootScreen(QString tag);
     void replace(QString tag);
 
+protected:
+    void clearList(QLayout *list);
 public:
     BaseFragment();
     ~BaseFragment();

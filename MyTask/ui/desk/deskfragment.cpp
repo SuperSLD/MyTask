@@ -56,6 +56,7 @@ DeskFragment::DeskFragment() {
     deskScrollArea->setWidget(scrolContainer);
     deskScrollArea->setWidgetResizable(true);
     deskScrollArea->horizontalScrollBar()->setEnabled(false);
+    deskScrollArea->verticalScrollBar()->hide();
 
     titleContainer->addWidget(backButton);
     titleContainer->addWidget(titleLabel);
@@ -115,6 +116,7 @@ DeskFragment::~DeskFragment() {
 }
 
 void DeskFragment::setData(BaseModel *model) {
+    clearList(cards);
     DeskModel *desk = dynamic_cast<DeskModel*>(model);
     this->model = desk;
     titleLabel->setText(desk->title);
@@ -188,12 +190,16 @@ void DeskFragment::onBackPressed() {
     back();
 }
 
+void DeskFragment::onResume() {
+    loadData();
+}
+
 void DeskFragment::onCreateCard() {
     navigateWhithData(ADD_CARD_TAG, this->model);
 }
 
 void DeskFragment::loadData() {
-    QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/mainPage"));
+    QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/desk/" + model->id));
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/json;charset=utf-8"));
     request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
@@ -233,7 +239,7 @@ void DeskFragment::onHttpResult(QNetworkReply *reply) {
         }
         if (obj["success"].toBool()) {
             if (type == LOAD_DATA) {
-                setData(new DeskModel(obj));
+                setData(new DeskModel(obj["data"].toObject()));
 
             }
         } else {
@@ -246,3 +252,5 @@ void DeskFragment::onHttpResult(QNetworkReply *reply) {
     }
     reply->deleteLater();
 }
+
+
