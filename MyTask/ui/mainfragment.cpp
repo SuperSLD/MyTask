@@ -191,8 +191,9 @@ void MainFragment::onHttpResult(QNetworkReply *reply) {
 
 void MainFragment::parseDeskList(QJsonArray items) {
     foreach(QJsonValue deskValue, items) {
-        deskList.append(DeskModel(deskValue.toObject()));
-        DeskWidget *deskWidget = new DeskWidget(&deskList.last());
+        DeskModel *deskModel = new DeskModel(deskValue.toObject());
+        deskList.append(deskModel);
+        DeskWidget *deskWidget = new DeskWidget(deskList.last());
         connect(deskWidget, &DeskWidget::deskSelected, this, &MainFragment::deskSelected);
         if (getCardH(start) <= getCardH(end)) {
             start->addWidget(deskWidget);

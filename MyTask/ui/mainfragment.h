@@ -16,7 +16,7 @@ private:
     QString token;
     QString lastRequest;
 
-    QList<DeskModel> deskList;
+    QList<DeskModel*> deskList;
     QLabel *userName;
 
     QVBoxLayout *start;

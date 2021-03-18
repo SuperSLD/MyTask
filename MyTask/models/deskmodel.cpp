@@ -27,8 +27,8 @@ QString DeskModel::getProgress() {
 }
 
 DeskModel* DeskModel::check(QString id) {
-    foreach(CardModel card, cards) {
-        if (card.check(id)) {
+    for(int i = 0; i < cards.size(); i++) {
+        if (cards[i].check(id)) {
             break;
         }
     }

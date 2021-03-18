@@ -9,6 +9,11 @@
 #include <QString>
 #include <QList>
 
+/**
+ * @brief The DeskModel class
+ *
+ * Модель доски с карточкамию.
+ */
 class DeskModel: public BaseModel {
 public:
     DeskModel(QJsonObject obj);

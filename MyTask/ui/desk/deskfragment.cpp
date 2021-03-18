@@ -52,6 +52,7 @@ DeskFragment::DeskFragment() {
     deskScrollArea->setStyleSheet(SCROL_BAR);
     cards = new QVBoxLayout;
     cards->setAlignment(Qt::AlignTop);
+    cards->setContentsMargins(0,0,0,0);
     scrolContainer->setLayout(cards);
     deskScrollArea->setWidget(scrolContainer);
     deskScrollArea->setWidgetResizable(true);

@@ -36,16 +36,17 @@ int CardModel::getSummCount() {
 
 bool CardModel::check(QString id) {
     if (this->type == "checkbox") {
-        foreach (CheckBoxModel box, this->checkbox) {
-            if (box.id == id) {
+        for (int i = 0; i < checkbox.size(); i++) {
+            if (checkbox[i].id == id) {
                 clickCount++;
+                qDebug("box id = " + id.toLatin1());
                 qDebug("box find and check [count = "+QString::number(clickCount).toLatin1()+"]");
-                if (box.checked) {
+                if (checkbox[i].checked) {
                     qDebug("checked");
-                    box.checked = false;
+                    checkbox[i].checked = false;
                 } else {
                     qDebug("unchecked");
-                    box.checked = true;
+                    checkbox[i].checked = true;
                 }
                 return true;
             }

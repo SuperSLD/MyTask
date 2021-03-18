@@ -2,8 +2,7 @@
 #define BASEMODEL_H
 
 
-class BaseModel
-{
+class BaseModel {
 public:
     BaseModel();
     virtual void pol();
