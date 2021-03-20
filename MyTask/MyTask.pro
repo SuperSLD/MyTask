@@ -30,6 +30,7 @@ SOURCES += \
     models/cardmodel.cpp \
     models/checkboxmodel.cpp \
     models/deskmodel.cpp \
+    models/historymodel.cpp \
     models/usermodel.cpp \
     screensfactory.cpp \
     style/stylecontainer.cpp \
@@ -40,6 +41,7 @@ SOURCES += \
     ui/desk/adddeskfragment.cpp \
     ui/desk/createinvitefragment.cpp \
     ui/desk/deskfragment.cpp \
+    ui/desk/historyfragment.cpp \
     ui/desk/userslistfragment.cpp \
     ui/invite/invitelistfragment.cpp \
     ui/mainfragment.cpp \
@@ -48,6 +50,7 @@ SOURCES += \
     ui/view/deskwidget.cpp \
     ui/view/invitewidget.cpp \
     ui/view/linewidget.cpp \
+    ui/view/loadingwidget.cpp \
     ui/view/qsvgbutton.cpp \
     ui/view/userwidget.cpp
 
@@ -60,6 +63,7 @@ HEADERS += \
     models/cardmodel.h \
     models/checkboxmodel.h \
     models/deskmodel.h \
+    models/historymodel.h \
     models/usermodel.h \
     screensfactory.h \
     style/stylecontainer.h \
@@ -70,6 +74,7 @@ HEADERS += \
     ui/desk/adddeskfragment.h \
     ui/desk/createinvitefragment.h \
     ui/desk/deskfragment.h \
+    ui/desk/historyfragment.h \
     ui/desk/userslistfragment.h \
     ui/invite/invitelistfragment.h \
     ui/mainfragment.h \
@@ -78,6 +83,7 @@ HEADERS += \
     ui/view/deskwidget.h \
     ui/view/invitewidget.h \
     ui/view/linewidget.h \
+    ui/view/loadingwidget.h \
     ui/view/qsvgbutton.h \
     ui/view/userwidget.h
 

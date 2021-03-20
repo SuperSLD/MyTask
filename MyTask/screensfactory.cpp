@@ -11,6 +11,7 @@
 #include <ui/desk/adddeskfragment.h>
 #include <ui/desk/createinvitefragment.h>
 #include <ui/desk/deskfragment.h>
+#include <ui/desk/historyfragment.h>
 #include <ui/desk/userslistfragment.h>
 
 #include <ui/invite/invitelistfragment.h>
@@ -49,6 +50,8 @@ BaseFragment* ScreensFactory::create(QString tag) {
         return new CreateInviteFragment;
     } else if (tag == INVITE_LIST_TAG) {
         return new InviteListFragment;
+    } else if (tag == HISTORY_DESK_TAG) {
+        return new HistoryFragment;
     } else {
         return nullptr;
     }

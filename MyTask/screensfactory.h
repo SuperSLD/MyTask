@@ -19,6 +19,7 @@ namespace screens {
     static const QString USERS_TAG = "users_list";
     static const QString CREATE_INVITE_TAG = "create_invite";
     static const QString INVITE_LIST_TAG = "invite_list";
+    static const QString HISTORY_DESK_TAG = "history_desk";
 
 };
 

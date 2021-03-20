@@ -41,6 +41,7 @@ DeskFragment::DeskFragment() {
     QHBoxLayout *buttonContainer = new QHBoxLayout;
     QPushButton *usersButton = new QPushButton("Пользователи");
     QPushButton *addButton = new QPushButton("Добавить");
+    QPushButton *historyButton = new QPushButton("История действий");
 
     QScrollArea *deskScrollArea = new QScrollArea;
     deskScrollArea->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -90,12 +91,16 @@ DeskFragment::DeskFragment() {
     connect(addButton, &QPushButton::clicked, this, &DeskFragment::onCreateCard);
     connect(usersButton, &QPushButton::clicked, this, &DeskFragment::onCheckCliced);
 
+    historyButton->setStyleSheet(BUTTON_PROFILE);
+    connect(historyButton, &QPushButton::clicked, this, &DeskFragment::onOpenHistory);
+
     infoContainer->setAlignment(Qt::AlignTop);
     infoContainer->addLayout(titleContainer);
     infoContainer->addWidget(description);
     infoContainer->addWidget(users);
     infoContainer->addWidget(progress);
     infoContainer->addLayout(buttonContainer);
+    infoContainer->addWidget(historyButton);
 
     mainHLayout->addLayout(infoContainer);
     mainHLayout->addWidget(deskScrollArea);
@@ -193,6 +198,10 @@ void DeskFragment::onCheckCliced() {
 
 void DeskFragment::onBackPressed() {
     back();
+}
+
+void DeskFragment::onOpenHistory() {
+    navigateWhithData(HISTORY_DESK_TAG, model);
 }
 
 void DeskFragment::onResume() {
