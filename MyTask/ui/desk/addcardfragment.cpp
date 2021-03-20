@@ -38,6 +38,10 @@ AddCardFragment::AddCardFragment() {
     loading = new WaitingSpinnerWidget(loadingContaiter, true, false);
     loading->setColor(QT_COLOR_PRIMARY);
     loadingContaiter->setMinimumWidth(100);
+    QFrame *loadingBoxContaiter = new QFrame;
+    loadingBox = new WaitingSpinnerWidget(loadingContaiter, true, false);
+    loadingBox->setColor(QT_COLOR_PRIMARY);
+    loadingBoxContaiter->setMinimumWidth(100);
 
     titleEdit = new QLineEdit;
     descriptionEdit = new QPlainTextEdit;
@@ -146,6 +150,7 @@ AddCardFragment::AddCardFragment() {
     createBoxButton->setMaximumWidth(335);
     createBoxButton->setMinimumWidth(335);
     connect(createBoxButton, &QPushButton::clicked, this, &AddCardFragment::onCreatePressed);
+    buttonBoxContainer->addWidget(loadingBoxContaiter);
     buttonBoxContainer->addWidget(createBoxButton);
     buttonBoxContainer->setAlignment(Qt::AlignRight);
 
@@ -178,6 +183,7 @@ AddCardFragment::~AddCardFragment() {
     delete simpleButtom;
     delete boxButton;
     delete loading;
+    delete loadingBox;
     //delete networkManager;
 }
 
@@ -207,9 +213,14 @@ void AddCardFragment::onBackPressed() {
 
 void AddCardFragment::onCreatePressed() {
     if (titleEdit->text().length() > 2 && descriptionEdit->toPlainText().length() > 10) {
+        if (this->currentType == "checkbox" && titleList.size() == 0) return;
         createButton->setDisabled(true);
         loading->show();
         createButton->setStyleSheet(BUTTON_DISABLED);
+        createBoxButton->setDisabled(true);
+        loadingBox->show();
+        createBoxButton->setStyleSheet(BUTTON_DISABLED);
+
         QJsonObject param;
         param.insert("desk_id", this->model->id);
         param.insert("title", titleEdit->text());
@@ -237,6 +248,10 @@ void AddCardFragment::onHttpResult(QNetworkReply *reply) {
     createButton->setDisabled(false);
     loading->stop();
     createButton->setStyleSheet(BUTTON_SOLID);
+    createBoxButton->setDisabled(false);
+    loadingBox->stop();
+    createBoxButton->setStyleSheet(BUTTON_SOLID);
+
     if(!reply->error()) {
         QByteArray resp = reply->readAll();
         qDebug() << resp << endl;

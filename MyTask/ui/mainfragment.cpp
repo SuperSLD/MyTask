@@ -30,7 +30,7 @@ MainFragment::MainFragment() {
 
     QPushButton *inviteButton = new QPushButton("Мои приглашения");
     QPushButton *addButton = new QPushButton("Создать доску");
-    QPushButton *exitButton = new QPushButton("Выйти из профиля");
+    exitButton = new QPushButton("Выйти из профиля");
 
     QVBoxLayout *userContainer = new QVBoxLayout;
     QSvgWidget *profileImage = new QSvgWidget(":/resc/resc/user_circle.svg");
@@ -118,6 +118,7 @@ MainFragment::~MainFragment() {
     delete end;
     delete loading;
     delete loadingExit;
+    delete exitButton;
 }
 
 void MainFragment::onResume() {
@@ -142,6 +143,8 @@ void MainFragment::loadData() {
 
 void MainFragment::onExit() {
     loadingExit->start();
+    exitButton->setDisabled(true);
+
     QNetworkRequest request(QUrl(SERVER_URL + "/api/users/logout"));
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/json;charset=utf-8"));
@@ -182,6 +185,7 @@ void MainFragment::onHttpResult(QNetworkReply *reply) {
         if (obj["success"].toBool()) {
             if (type == EXIT) {
                 loadingExit->stop();
+                exitButton->setDisabled(false);
                 QSettings *settings = new QSettings("settings.ini", QSettings::IniFormat);
                 settings->setValue("token", "");
                 settings->sync();

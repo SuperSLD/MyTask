@@ -10,11 +10,15 @@
 
 #include <common/base/basefragment.h>
 
+#include <ui/view/waitingspinnerwidget.h>
+
 class AddDeskFragment : public BaseFragment{
     Q_OBJECT
 
 private:
     QString token;
+
+    WaitingSpinnerWidget *loading;
 
     QLineEdit *titleEdit;
     QPlainTextEdit *descriptionEdit;

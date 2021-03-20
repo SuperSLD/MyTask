@@ -14,6 +14,7 @@ using namespace styles;
 #include <QMessageBox>
 
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/waitingspinnerwidget.h>
 using namespace screens;
 
 AddDeskFragment::AddDeskFragment() {
@@ -29,6 +30,11 @@ AddDeskFragment::AddDeskFragment() {
 
     QHBoxLayout *buttoContainer = new QHBoxLayout;
     createButton = new QPushButton("Создать доску");
+
+    QFrame *loadingContaiter = new QFrame;
+    loading = new WaitingSpinnerWidget(loadingContaiter, true, false);
+    loading->setColor(QT_COLOR_PRIMARY);
+    loadingContaiter->setMinimumWidth(100);
 
     titleEdit = new QLineEdit;
     descriptionEdit = new QPlainTextEdit;
@@ -54,6 +60,7 @@ AddDeskFragment::AddDeskFragment() {
     createButton->setMaximumWidth(335);
     createButton->setMinimumWidth(335);
     connect(createButton, &QPushButton::clicked, this, &AddDeskFragment::onCreatePressed);
+    buttoContainer->addWidget(loadingContaiter);
     buttoContainer->addWidget(createButton);
     buttoContainer->setAlignment(Qt::AlignRight);
 
@@ -79,6 +86,7 @@ AddDeskFragment::~AddDeskFragment() {
     delete titleEdit;
     delete descriptionEdit;
     delete createButton;
+    delete loading;
     networkManager->clearAccessCache();
 }
 
@@ -96,6 +104,10 @@ void AddDeskFragment::onBackPressed() {
 
 void AddDeskFragment::onCreatePressed() {
     if (titleEdit->text().length() > 2 && descriptionEdit->toPlainText().length() > 10) {
+        loading->start();
+        createButton->setDisabled(true);
+        createButton->setStyleSheet(BUTTON_DISABLED);
+
         QJsonObject param;
         param.insert("title", titleEdit->text());
         param.insert("description", descriptionEdit->toPlainText());
@@ -111,6 +123,10 @@ void AddDeskFragment::onCreatePressed() {
 }
 
 void AddDeskFragment::onHttpResult(QNetworkReply *reply) {
+    loading->stop();
+    createButton->setDisabled(false);
+    createButton->setStyleSheet(BUTTON_SOLID);
+
     if(!reply->error()) {
         QByteArray resp = reply->readAll();
         qDebug() << resp << endl;

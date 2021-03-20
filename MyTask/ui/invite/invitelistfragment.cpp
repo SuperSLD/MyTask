@@ -149,10 +149,11 @@ void InviteListFragment::onHttpResult(QNetworkReply *reply) {
                 parseDeskList(obj["data"].toArray());
             }
         } else {
-            qDebug("login error");
+            loading->stop();
             QMessageBox::warning(this, "Ошибка", obj["message"].toString());
         }
     } else {
+        loading->stop();
         QMessageBox::warning(this, "Ошибка",
             "При подключениии произошла ошибка.\n"        );
     }

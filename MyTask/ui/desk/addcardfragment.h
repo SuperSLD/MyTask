@@ -26,6 +26,7 @@ private:
     QLineEdit *cardTitleEdit;
 
     WaitingSpinnerWidget *loading;
+    WaitingSpinnerWidget *loadingBox;
 
     QPlainTextEdit *descriptionEdit;
     QPushButton *createButton;

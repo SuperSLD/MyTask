@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include <models/deskmodel.h>
 #include <ui/view/waitingspinnerwidget.h>
@@ -16,6 +17,8 @@ private:
     QNetworkAccessManager *networkManager;
     QString token;
     QString lastRequest;
+
+    QPushButton *exitButton;
 
     QList<DeskModel*> deskList;
     QLabel *userName;
