@@ -20,6 +20,7 @@ using namespace styles;
 #include <ui/view/deskwidget.h>
 #include <ui/view/invitewidget.h>
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/waitingspinnerwidget.h>
 using namespace screens;
 
 InviteListFragment::InviteListFragment() {
@@ -48,6 +49,10 @@ InviteListFragment::InviteListFragment() {
     deskScrollArea->setMaximumWidth(820);
     deskScrollArea->setFrameShape(QFrame::NoFrame);
     QWidget *scrolContainer = new QWidget;
+
+    loading = new WaitingSpinnerWidget(scrolContainer, true, false);
+    loading->setColor(QT_COLOR_PRIMARY);
+
     scrolContainer->setObjectName("container");
     scrolContainer->setStyleSheet(GLOBAL_BACK_WHITE);
     deskScrollArea->setStyleSheet(SCROL_BAR);
@@ -82,9 +87,11 @@ InviteListFragment::~InviteListFragment() {
     delete userName;
     delete start;
     delete end;
+    delete loading;
 }
 
 void InviteListFragment::loadData() {
+    loading->start();
     QNetworkRequest request(QUrl(SERVER_URL + "/api/invite/list"));
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/json;charset=utf-8"));
@@ -153,6 +160,7 @@ void InviteListFragment::onHttpResult(QNetworkReply *reply) {
 }
 
 void InviteListFragment::parseDeskList(QJsonArray items) {
+    loading->stop();
     clearLayout(start);
     clearLayout(end);
     deskList.clear();

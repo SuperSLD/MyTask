@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QNetworkReply>
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/waitingspinnerwidget.h>
 #include <QJsonDocument>
 #include <QMessageBox>
 
@@ -31,6 +32,11 @@ CreateInviteFragment::CreateInviteFragment() {
     QHBoxLayout *buttoContainer = new QHBoxLayout;
     createButton = new QPushButton("Отправить приглашение");
 
+    QFrame *loadingContaiter = new QFrame;
+    loading = new WaitingSpinnerWidget(loadingContaiter, true, false);
+    loading->setColor(QT_COLOR_PRIMARY);
+    loadingContaiter->setMinimumWidth(100);
+
     titleEdit = new QLineEdit;
 
     titleLabel->setStyleSheet(TITLE_LABLE);
@@ -49,6 +55,7 @@ CreateInviteFragment::CreateInviteFragment() {
     createButton->setMaximumWidth(335);
     createButton->setMinimumWidth(335);
     connect(createButton, &QPushButton::clicked, this, &CreateInviteFragment::onCreatePressed);
+    buttoContainer->addWidget(loadingContaiter);
     buttoContainer->addWidget(createButton);
     buttoContainer->setAlignment(Qt::AlignRight);
 
@@ -80,6 +87,7 @@ CreateInviteFragment::CreateInviteFragment() {
 CreateInviteFragment::~CreateInviteFragment() {
     delete titleEdit;
     delete createButton;
+    delete loading;
     networkManager->clearAccessCache();
 }
 
@@ -102,6 +110,10 @@ void CreateInviteFragment::setData(BaseModel *model) {
 
 void CreateInviteFragment::onCreatePressed() {
     if (titleEdit->text().length() > 5) {
+        loading->start();
+        createButton->setDisabled(true);
+        createButton->setStyleSheet(BUTTON_DISABLED);
+
         QJsonObject param;
         param.insert("login", titleEdit->text());
         param.insert("desk_id", model->id);
@@ -117,6 +129,10 @@ void CreateInviteFragment::onCreatePressed() {
 }
 
 void CreateInviteFragment::onHttpResult(QNetworkReply *reply) {
+    loading->stop();
+    createButton->setDisabled(false);
+    createButton->setStyleSheet(BUTTON_SOLID);
+
     if(!reply->error()) {
         QByteArray resp = reply->readAll();
         qDebug() << resp << endl;

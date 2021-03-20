@@ -50,9 +50,9 @@ SOURCES += \
     ui/view/deskwidget.cpp \
     ui/view/invitewidget.cpp \
     ui/view/linewidget.cpp \
-    ui/view/loadingwidget.cpp \
     ui/view/qsvgbutton.cpp \
-    ui/view/userwidget.cpp
+    ui/view/userwidget.cpp \
+    ui/view/waitingspinnerwidget.cpp
 
 HEADERS += \
     common/base/basefragment.h \
@@ -85,7 +85,8 @@ HEADERS += \
     ui/view/linewidget.h \
     ui/view/loadingwidget.h \
     ui/view/qsvgbutton.h \
-    ui/view/userwidget.h
+    ui/view/userwidget.h \
+    ui/view/waitingspinnerwidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

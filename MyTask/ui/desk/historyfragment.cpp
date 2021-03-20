@@ -16,11 +16,13 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QNetworkReply>
+#include <QColor>
 
 
 #include <ui/view/linewidget.h>
 #include <ui/view/loadingwidget.h>
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/waitingspinnerwidget.h>
 
 using namespace styles;
 using namespace screens;
@@ -33,7 +35,8 @@ HistoryFragment::HistoryFragment() {
     QHBoxLayout *mainHLayout = new QHBoxLayout;
     QVBoxLayout *mainVLayout = new QVBoxLayout;
     QHBoxLayout *titleContainer = new QHBoxLayout;
-    loading = new LoadingWidget;
+    loading = new WaitingSpinnerWidget(this, true, false);
+    loading->setColor(QT_COLOR_PRIMARY);
     QSvgButton *backButton = new QSvgButton(":/resc/resc/arrow_back.svg", QSize(24,24));
     QLabel *titleLabel = new QLabel("История действий");
     titleLabel->setStyleSheet(TITLE_LABLE);
@@ -77,6 +80,7 @@ HistoryFragment::HistoryFragment() {
     this->setStyleSheet(BACK_WHITE);
     this->setObjectName("fragment");
 
+    loading->start();
     networkManager = new QNetworkAccessManager();
     connect(networkManager, &QNetworkAccessManager::finished, this, &HistoryFragment::onHttpResult);
 }
@@ -84,7 +88,7 @@ HistoryFragment::HistoryFragment() {
 void HistoryFragment::setData(BaseModel *model) {
     DeskModel *desk = dynamic_cast<DeskModel*>(model);
     this->model = desk;
-    //loadData();
+    loadData();
 }
 
 HistoryFragment::~HistoryFragment() {
@@ -93,6 +97,7 @@ HistoryFragment::~HistoryFragment() {
 }
 
 void HistoryFragment::parseHistoryList(QJsonArray items) {
+    loading->stop();
     clearList(start);
     foreach(QJsonValue value, items) {
         HistoryModel historyLine = HistoryModel(value.toObject());

@@ -18,6 +18,7 @@ using namespace styles;
 #include <QScrollBar>
 
 #include <ui/view/deskwidget.h>
+#include <ui/view/waitingspinnerwidget.h>
 using namespace screens;
 
 MainFragment::MainFragment() {
@@ -41,6 +42,15 @@ MainFragment::MainFragment() {
     deskScrollArea->setMinimumWidth(820);
     deskScrollArea->setFrameShape(QFrame::NoFrame);
     QWidget *scrolContainer = new QWidget;
+
+    loading = new WaitingSpinnerWidget(scrolContainer, true, false);
+    loading->setColor(QT_COLOR_PRIMARY);
+
+    QFrame *loadingExitContainer = new QFrame;
+    loadingExitContainer->setMinimumHeight(200);
+    loadingExit = new WaitingSpinnerWidget(loadingExitContainer, true, false);
+    loadingExit->setColor(QT_COLOR_PRIMARY);
+
     scrolContainer->setObjectName("container");
     scrolContainer->setStyleSheet(GLOBAL_BACK_WHITE);
     deskScrollArea->setStyleSheet(SCROL_BAR);
@@ -80,6 +90,7 @@ MainFragment::MainFragment() {
     profileContainer->addWidget(inviteButton);
     profileContainer->addWidget(addButton);
     profileContainer->addWidget(exitButton);
+    profileContainer->addWidget(loadingExitContainer);
     profileContainer->setAlignment(Qt::AlignTop);
     connect(inviteButton, &QPushButton::clicked, this, &MainFragment::onInvite);
     connect(addButton, &QPushButton::clicked, this, &MainFragment::onAdd);
@@ -93,6 +104,8 @@ MainFragment::MainFragment() {
     this->setStyleSheet(BACK_WHITE);
     this->setObjectName("fragment");
 
+    loading->start();
+
     networkManager = new QNetworkAccessManager();
     connect(networkManager, &QNetworkAccessManager::finished, this, &MainFragment::onHttpResult);
     loadData();
@@ -103,6 +116,8 @@ MainFragment::~MainFragment() {
     delete userName;
     delete start;
     delete end;
+    delete loading;
+    delete loadingExit;
 }
 
 void MainFragment::onResume() {
@@ -110,6 +125,7 @@ void MainFragment::onResume() {
     clearLayout(start);
     clearLayout(end);
     deskList.clear();
+    loading->start();
     loadData();
 }
 
@@ -125,6 +141,7 @@ void MainFragment::loadData() {
 }
 
 void MainFragment::onExit() {
+    loadingExit->start();
     QNetworkRequest request(QUrl(SERVER_URL + "/api/users/logout"));
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/json;charset=utf-8"));
@@ -164,6 +181,7 @@ void MainFragment::onHttpResult(QNetworkReply *reply) {
         }
         if (obj["success"].toBool()) {
             if (type == EXIT) {
+                loadingExit->stop();
                 QSettings *settings = new QSettings("settings.ini", QSettings::IniFormat);
                 settings->setValue("token", "");
                 settings->sync();
@@ -179,10 +197,13 @@ void MainFragment::onHttpResult(QNetworkReply *reply) {
 
             }
         } else {
-            qDebug("login error");
+            loading->stop();
+            loadingExit->stop();
             QMessageBox::warning(this, "Ошибка", obj["message"].toString());
         }
     } else {
+        loading->stop();
+        loadingExit->stop();
         QMessageBox::warning(this, "Ошибка",
             "При подключениии произошла ошибка.\n"        );
     }
@@ -190,6 +211,7 @@ void MainFragment::onHttpResult(QNetworkReply *reply) {
 }
 
 void MainFragment::parseDeskList(QJsonArray items) {
+    loading->stop();
     foreach(QJsonValue deskValue, items) {
         DeskModel *deskModel = new DeskModel(deskValue.toObject());
         deskList.append(deskModel);

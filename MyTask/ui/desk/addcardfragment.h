@@ -12,6 +12,7 @@
 #include <models/deskmodel.h>
 
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/waitingspinnerwidget.h>
 
 class AddCardFragment: public BaseFragment {
     Q_OBJECT
@@ -23,6 +24,8 @@ private:
 
     QLineEdit *titleEdit;
     QLineEdit *cardTitleEdit;
+
+    WaitingSpinnerWidget *loading;
 
     QPlainTextEdit *descriptionEdit;
     QPushButton *createButton;

@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/waitingspinnerwidget.h>
 #include <QJsonArray>
 #include <QMessageBox>
 #include <QNetworkReply>
@@ -33,6 +34,10 @@ AddCardFragment::AddCardFragment() {
     createButton = new QPushButton("Добавить карточку");
     createBoxButton = new QPushButton("Добавить карточку");
 
+    QFrame *loadingContaiter = new QFrame;
+    loading = new WaitingSpinnerWidget(loadingContaiter, true, false);
+    loading->setColor(QT_COLOR_PRIMARY);
+    loadingContaiter->setMinimumWidth(100);
 
     titleEdit = new QLineEdit;
     descriptionEdit = new QPlainTextEdit;
@@ -133,6 +138,7 @@ AddCardFragment::AddCardFragment() {
     createButton->setMaximumWidth(335);
     createButton->setMinimumWidth(335);
     connect(createButton, &QPushButton::clicked, this, &AddCardFragment::onCreatePressed);
+    buttoContainer->addWidget(loadingContaiter);
     buttoContainer->addWidget(createButton);
     buttoContainer->setAlignment(Qt::AlignRight);
 
@@ -171,6 +177,7 @@ AddCardFragment::~AddCardFragment() {
     delete createButton;
     delete simpleButtom;
     delete boxButton;
+    delete loading;
     //delete networkManager;
 }
 
@@ -200,6 +207,9 @@ void AddCardFragment::onBackPressed() {
 
 void AddCardFragment::onCreatePressed() {
     if (titleEdit->text().length() > 2 && descriptionEdit->toPlainText().length() > 10) {
+        createButton->setDisabled(true);
+        loading->show();
+        createButton->setStyleSheet(BUTTON_DISABLED);
         QJsonObject param;
         param.insert("desk_id", this->model->id);
         param.insert("title", titleEdit->text());
@@ -224,6 +234,9 @@ void AddCardFragment::onCreatePressed() {
 }
 
 void AddCardFragment::onHttpResult(QNetworkReply *reply) {
+    createButton->setDisabled(false);
+    loading->stop();
+    createButton->setStyleSheet(BUTTON_SOLID);
     if(!reply->error()) {
         QByteArray resp = reply->readAll();
         qDebug() << resp << endl;

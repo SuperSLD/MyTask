@@ -8,6 +8,7 @@
 #include <QNetworkReply>
 #include <QVBoxLayout>
 #include <models/deskmodel.h>
+#include <ui/view/waitingspinnerwidget.h>
 
 class MainFragment: public BaseFragment {
     Q_OBJECT
@@ -21,6 +22,10 @@ private:
 
     QVBoxLayout *start;
     QVBoxLayout *end;
+
+    WaitingSpinnerWidget *loading;
+    WaitingSpinnerWidget *loadingExit;
+
 
     const QString EXIT = "req_exit";
     const QString LIST = "req_list";

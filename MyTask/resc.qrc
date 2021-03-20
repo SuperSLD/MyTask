@@ -7,5 +7,6 @@
         <file>resc/user_circle.svg</file>
         <file>resc/done_outline.svg</file>
         <file>resc/icon.ico</file>
+        <file>resc/loader.gif</file>
     </qresource>
 </RCC>

@@ -1,6 +1,7 @@
 #ifndef STYLECONTAINER_H
 #define STYLECONTAINER_H
 
+#include <QColor>
 #include <QString>
 
 namespace styles{
@@ -12,6 +13,8 @@ namespace styles{
     static const QString COLOR_BORDER = "#E6EBF0";
     static const QString COLOR_TEXT_RED = "#FF6262";
     static const QString COLOR_BUTTON_PRESSED = "#2A669C";
+
+    static const QColor QT_COLOR_PRIMARY = QColor(72, 129, 183);
 
     /** объявления стилей */
     static const QString GLOBAL_BACK_WHITE =

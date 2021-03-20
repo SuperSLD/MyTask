@@ -9,6 +9,8 @@
 
 #include <models/deskmodel.h>
 
+#include <ui/view/waitingspinnerwidget.h>
+
 
 
 class CreateInviteFragment: public BaseFragment {
@@ -17,6 +19,8 @@ private:
     QString token;
 
     DeskModel *model;
+
+    WaitingSpinnerWidget *loading;
 
     QLineEdit *titleEdit;
     QPushButton *createButton;

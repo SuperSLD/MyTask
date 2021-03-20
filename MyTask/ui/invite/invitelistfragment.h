@@ -8,6 +8,7 @@
 #include <QNetworkReply>
 #include <QVBoxLayout>
 #include <models/deskmodel.h>
+#include <ui/view/waitingspinnerwidget.h>
 
 class InviteListFragment: public BaseFragment {
     Q_OBJECT
@@ -18,6 +19,8 @@ private:
 
     QList<DeskModel> deskList;
     QLabel *userName;
+
+    WaitingSpinnerWidget *loading;
 
     QVBoxLayout *start;
     QVBoxLayout *end;

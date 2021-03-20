@@ -9,6 +9,7 @@
 #include <models/deskmodel.h>
 #include <models/historymodel.h>
 #include <ui/view/loadingwidget.h>
+#include <ui/view/waitingspinnerwidget.h>
 
 class HistoryFragment: public BaseFragment {
     Q_OBJECT
@@ -19,7 +20,7 @@ private:
     QList<HistoryModel> historyList;
     DeskModel *model;
 
-    LoadingWidget *loading;
+    WaitingSpinnerWidget *loading;
     QVBoxLayout *start;
 
     void loadData();
