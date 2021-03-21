@@ -14,6 +14,7 @@ using namespace styles;
 #include <QMessageBox>
 
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/waitingspinnerwidget.h>
 using namespace screens;
 
 RegistrationFragment::RegistrationFragment() {
@@ -42,6 +43,13 @@ RegistrationFragment::RegistrationFragment() {
     passwordEdit = new QLineEdit;
 
     QVBoxLayout *buttonContainer = new QVBoxLayout;
+
+    QHBoxLayout *loadingButtonContainer = new QHBoxLayout;
+    loadingContaiter = new QFrame;
+    loading = new WaitingSpinnerWidget(loadingContaiter, true, false);
+    loading->setColor(QT_COLOR_PRIMARY);
+    loadingContaiter->setMinimumWidth(100);
+    loadingContaiter->hide();
 
     loginButton = new QPushButton("Создать профиль");
 
@@ -74,7 +82,9 @@ RegistrationFragment::RegistrationFragment() {
     connect(loginButton, &QPushButton::clicked, this, &RegistrationFragment::onRegPressed);
     buttonContainer->addWidget(loginEdit);
     buttonContainer->addWidget(passwordEdit);
-    buttonContainer->addWidget(loginButton);
+    loadingButtonContainer->addWidget(loginButton);
+    loadingButtonContainer->addWidget(loadingContaiter);
+    buttonContainer->addLayout(loadingButtonContainer);
 
     startContent->setContentsMargins(46,46,46,46);
     mainImage->setContentsMargins(0,0,56,0);
@@ -109,6 +119,8 @@ RegistrationFragment::~RegistrationFragment() {
     delete passwordEdit;
     delete loginButton;
     delete networkManager;
+    delete loading;
+    delete loadingContaiter;
 }
 
 void RegistrationFragment::onRegPressed() {
@@ -116,6 +128,11 @@ void RegistrationFragment::onRegPressed() {
     param.insert("login", loginEdit->text());
     param.insert("password", passwordEdit->text());
     if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
+        loading->start();
+        loadingContaiter->show();
+        loginButton->setDisabled(true);
+        loginButton->setStyleSheet(BUTTON_DISABLED);
+
         QNetworkRequest request(QUrl(SERVER_URL + "/api/users/registration"));
         request.setHeader(QNetworkRequest::ContentTypeHeader,
                           QStringLiteral("application/json;charset=utf-8"));
@@ -127,6 +144,11 @@ void RegistrationFragment::onRegPressed() {
 }
 
 void RegistrationFragment::onRegResult(QNetworkReply *reply) {
+    loading->stop();
+    loadingContaiter->hide();
+    loginButton->setDisabled(false);
+    checkData();
+
     if(!reply->error()) {
         QByteArray resp = reply->readAll();
         qDebug() << resp << endl;

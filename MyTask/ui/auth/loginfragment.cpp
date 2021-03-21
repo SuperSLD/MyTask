@@ -7,6 +7,7 @@
 #include <QTreeWidgetItem>
 #include <QVBoxLayout>
 #include <ui/view/qsvgbutton.h>
+#include <ui/view/waitingspinnerwidget.h>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
@@ -39,6 +40,12 @@ LoginFragment::LoginFragment() {
     passwordEdit = new QLineEdit;
 
     QVBoxLayout *buttonContainer = new QVBoxLayout;
+    QHBoxLayout *loadingButtonContainer = new QHBoxLayout;
+    loadingContaiter = new QFrame;
+    loading = new WaitingSpinnerWidget(loadingContaiter, true, false);
+    loading->setColor(QT_COLOR_PRIMARY);
+    loadingContaiter->setMinimumWidth(100);
+    loadingContaiter->hide();
 
     loginButton = new QPushButton("Войти");
 
@@ -71,7 +78,9 @@ LoginFragment::LoginFragment() {
     connect(loginButton, &QPushButton::clicked, this, &LoginFragment::onLoginPressed);
     buttonContainer->addWidget(loginEdit);
     buttonContainer->addWidget(passwordEdit);
-    buttonContainer->addWidget(loginButton);
+    loadingButtonContainer->addWidget(loginButton);
+    loadingButtonContainer->addWidget(loadingContaiter);
+    buttonContainer->addLayout(loadingButtonContainer);
 
     startContent->setContentsMargins(46,46,46,46);
     mainImage->setContentsMargins(0,0,56,0);
@@ -105,6 +114,8 @@ LoginFragment::~LoginFragment() {
     delete loginEdit;
     delete passwordEdit;
     delete loginButton;
+    delete loading;
+    delete loadingContaiter;
     networkManager->clearAccessCache();
 }
 
@@ -113,6 +124,11 @@ void LoginFragment::onLoginPressed() {
     param.insert("login", loginEdit->text());
     param.insert("password", passwordEdit->text());
     if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
+        loading->start();
+        loadingContaiter->show();
+        loginButton->setDisabled(true);
+        loginButton->setStyleSheet(BUTTON_DISABLED);
+
         qDebug() << "create request" << endl;
         QNetworkRequest request(QUrl(SERVER_URL + "/api/users/login"));
         request.setHeader(QNetworkRequest::ContentTypeHeader,
@@ -128,6 +144,10 @@ void LoginFragment::onLoginPressed() {
 
 void LoginFragment::onHttpResult(QNetworkReply *reply) {
     qDebug() << "http finished" << endl;
+    loading->stop();
+    loadingContaiter->hide();
+    loginButton->setDisabled(false);
+    checkData();
     if(!reply->error()) {
         QByteArray resp = reply->readAll();
         qDebug() << resp << endl;

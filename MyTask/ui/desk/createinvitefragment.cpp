@@ -131,7 +131,7 @@ void CreateInviteFragment::onCreatePressed() {
 void CreateInviteFragment::onHttpResult(QNetworkReply *reply) {
     loading->stop();
     createButton->setDisabled(false);
-    createButton->setStyleSheet(BUTTON_SOLID);
+    checkData();
 
     if(!reply->error()) {
         QByteArray resp = reply->readAll();

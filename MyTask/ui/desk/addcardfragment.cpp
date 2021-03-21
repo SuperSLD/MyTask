@@ -247,10 +247,9 @@ void AddCardFragment::onCreatePressed() {
 void AddCardFragment::onHttpResult(QNetworkReply *reply) {
     createButton->setDisabled(false);
     loading->stop();
-    createButton->setStyleSheet(BUTTON_SOLID);
     createBoxButton->setDisabled(false);
     loadingBox->stop();
-    createBoxButton->setStyleSheet(BUTTON_SOLID);
+    checkData();
 
     if(!reply->error()) {
         QByteArray resp = reply->readAll();

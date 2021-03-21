@@ -7,6 +7,8 @@
 #include <QNetworkAccessManager>
 #include <QPushButton>
 
+#include <ui/view/waitingspinnerwidget.h>
+
 
 
 class RegistrationFragment : public BaseFragment {
@@ -16,6 +18,9 @@ private:
     QLineEdit *passwordEdit;
     QNetworkAccessManager *networkManager;
     QPushButton *loginButton;
+
+    WaitingSpinnerWidget *loading;
+    QFrame *loadingContaiter;
 public:
     RegistrationFragment();
     ~RegistrationFragment();

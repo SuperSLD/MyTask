@@ -106,7 +106,7 @@ void AddDeskFragment::onCreatePressed() {
     if (titleEdit->text().length() > 2 && descriptionEdit->toPlainText().length() > 10) {
         loading->start();
         createButton->setDisabled(true);
-        createButton->setStyleSheet(BUTTON_DISABLED);
+        checkData();
 
         QJsonObject param;
         param.insert("title", titleEdit->text());

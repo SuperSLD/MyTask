@@ -8,6 +8,8 @@
 #include <QNetworkReply>
 #include <QPushButton>
 
+#include <ui/view/waitingspinnerwidget.h>
+
 
 
 class LoginFragment: public BaseFragment {
@@ -16,6 +18,10 @@ private:
     QLineEdit *loginEdit;
     QLineEdit *passwordEdit;
     QPushButton *loginButton;
+
+    WaitingSpinnerWidget *loading;
+    QFrame *loadingContaiter;
+
     QNetworkAccessManager *networkManager;
 public:
     LoginFragment();
