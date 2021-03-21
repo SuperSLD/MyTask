@@ -42,6 +42,7 @@ public slots:
     void onCreateCard();
     void onCheckCliced();
     void onOpenHistory();
+    void onEditPressed();
 
     void onHttpResult(QNetworkReply *reply);
     void clickBox(QString id);
