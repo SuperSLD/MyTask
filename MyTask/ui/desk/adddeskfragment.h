@@ -12,11 +12,16 @@
 
 #include <ui/view/waitingspinnerwidget.h>
 
+#include <models/deskmodel.h>
+
 class AddDeskFragment : public BaseFragment{
     Q_OBJECT
 
 private:
     QString token;
+
+    bool editmode = false;
+    DeskModel *model;
 
     WaitingSpinnerWidget *loading;
 
@@ -25,9 +30,11 @@ private:
     QPushButton *createButton;
     QNetworkAccessManager *networkManager;
 
+    void setData(BaseModel* model) override;
 public:
     AddDeskFragment();
     ~AddDeskFragment();
+
 
 public slots:
     void onBackPressed();

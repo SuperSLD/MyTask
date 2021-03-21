@@ -111,7 +111,13 @@ void AddDeskFragment::onCreatePressed() {
         QJsonObject param;
         param.insert("title", titleEdit->text());
         param.insert("description", descriptionEdit->toPlainText());
-        QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/create"));
+        QString url = "";
+        if (editmode) {
+            url = SERVER_URL + "/api/desk/create";
+        } else {
+            url = SERVER_URL + "/api/desk/create";
+        }
+        QNetworkRequest request((QUrl(url)));
         request.setHeader(QNetworkRequest::ContentTypeHeader,
                           QStringLiteral("application/json;charset=utf-8"));
         request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
@@ -154,4 +160,13 @@ void AddDeskFragment::onHttpResult(QNetworkReply *reply) {
             "При подключениии произошла ошибка.\n"        );
     }
     reply->deleteLater();
+}
+
+void AddDeskFragment::setData(BaseModel *model) {
+    DeskModel *desk = dynamic_cast<DeskModel*>(model);
+    this->model = desk;
+
+    titleEdit->setText(this->model->title);
+    descriptionEdit->setPlainText(this->model->description);
+    checkData();
 }
