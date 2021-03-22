@@ -26,7 +26,7 @@ AddDeskFragment::AddDeskFragment() {
 
     QHBoxLayout *titleContainer = new QHBoxLayout;
     QSvgButton *backButton = new QSvgButton(":/resc/resc/arrow_back.svg", QSize(24,24));
-    QLabel *titleLabel = new QLabel("Создание доски");
+    titleLabel = new QLabel("Создание доски");
 
     QHBoxLayout *buttoContainer = new QHBoxLayout;
     createButton = new QPushButton("Создать доску");
@@ -87,6 +87,7 @@ AddDeskFragment::~AddDeskFragment() {
     delete descriptionEdit;
     delete createButton;
     delete loading;
+    delete titleLabel;
     networkManager->clearAccessCache();
 }
 
@@ -108,23 +109,32 @@ void AddDeskFragment::onCreatePressed() {
         createButton->setDisabled(true);
         checkData();
 
-        QJsonObject param;
-        param.insert("title", titleEdit->text());
-        param.insert("description", descriptionEdit->toPlainText());
-        QString url = "";
         if (editmode) {
-            url = SERVER_URL + "/api/desk/create";
+            QJsonObject param;
+            param.insert("id", model->id);
+            param.insert("title", titleEdit->text());
+            param.insert("description", descriptionEdit->toPlainText());
+            QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/edit"));
+            request.setHeader(QNetworkRequest::ContentTypeHeader,
+                              QStringLiteral("application/json;charset=utf-8"));
+            request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
+            networkManager->post(
+                request,
+                QJsonDocument(param).toJson(QJsonDocument::Compact)
+            );
         } else {
-            url = SERVER_URL + "/api/desk/create";
+            QJsonObject param;
+            param.insert("title", titleEdit->text());
+            param.insert("description", descriptionEdit->toPlainText());
+            QNetworkRequest request(QUrl(SERVER_URL + "/api/desk/create"));
+            request.setHeader(QNetworkRequest::ContentTypeHeader,
+                              QStringLiteral("application/json;charset=utf-8"));
+            request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
+            networkManager->post(
+                request,
+                QJsonDocument(param).toJson(QJsonDocument::Compact)
+            );
         }
-        QNetworkRequest request((QUrl(url)));
-        request.setHeader(QNetworkRequest::ContentTypeHeader,
-                          QStringLiteral("application/json;charset=utf-8"));
-        request.setRawHeader("Authorization", ("Bearer " + token).toLocal8Bit());
-        networkManager->post(
-            request,
-            QJsonDocument(param).toJson(QJsonDocument::Compact)
-        );
     }
 }
 
@@ -157,7 +167,7 @@ void AddDeskFragment::onHttpResult(QNetworkReply *reply) {
         }
     } else {
         QMessageBox::warning(this, "Ошибка",
-            "При подключениии произошла ошибка.\n"        );
+            "При подключениии произошла ошибка.\n");
     }
     reply->deleteLater();
 }
@@ -166,6 +176,9 @@ void AddDeskFragment::setData(BaseModel *model) {
     DeskModel *desk = dynamic_cast<DeskModel*>(model);
     this->model = desk;
 
+    editmode = true;
+    titleLabel->setText("Изменение доски");
+    createButton->setText("Изменить");
     titleEdit->setText(this->model->title);
     descriptionEdit->setPlainText(this->model->description);
     checkData();

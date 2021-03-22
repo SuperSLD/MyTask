@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QNetworkReply>
 #include <QPlainTextEdit>
+#include <QLabel>
 
 #include <common/base/basefragment.h>
 
@@ -25,6 +26,7 @@ private:
 
     WaitingSpinnerWidget *loading;
 
+    QLabel *titleLabel;
     QLineEdit *titleEdit;
     QPlainTextEdit *descriptionEdit;
     QPushButton *createButton;
