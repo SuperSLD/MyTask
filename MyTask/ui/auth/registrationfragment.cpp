@@ -41,6 +41,7 @@ RegistrationFragment::RegistrationFragment() {
                 );
     loginEdit = new QLineEdit;
     passwordEdit = new QLineEdit;
+    inviteKeyEdit = new QLineEdit;
 
     QVBoxLayout *buttonContainer = new QVBoxLayout;
 
@@ -66,6 +67,10 @@ RegistrationFragment::RegistrationFragment() {
     startMainLayout->addLayout(startVerticalContent);
     startMainLayout->addLayout(buttonContainer);
 
+    inviteKeyEdit->setMaximumWidth(335);
+    inviteKeyEdit->setStyleSheet(EDIT_TEXT);
+    inviteKeyEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    inviteKeyEdit->setPlaceholderText("Ключ приглашения");
     loginEdit->setMaximumWidth(335);
     loginEdit->setStyleSheet(EDIT_TEXT);
     loginEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -77,11 +82,13 @@ RegistrationFragment::RegistrationFragment() {
     passwordEdit->setEchoMode(QLineEdit::Password);
     connect(loginEdit, &QLineEdit::textChanged, this, &RegistrationFragment::checkData);
     connect(passwordEdit, &QLineEdit::textChanged, this, &RegistrationFragment::checkData);
+    connect(inviteKeyEdit, &QLineEdit::textChanged, this, &RegistrationFragment::checkData);
 
     loginButton->setStyleSheet(BUTTON_SOLID);
     connect(loginButton, &QPushButton::clicked, this, &RegistrationFragment::onRegPressed);
     buttonContainer->addWidget(loginEdit);
     buttonContainer->addWidget(passwordEdit);
+    buttonContainer->addWidget(inviteKeyEdit);
     loadingButtonContainer->addWidget(loginButton);
     loadingButtonContainer->addWidget(loadingContaiter);
     buttonContainer->addLayout(loadingButtonContainer);
@@ -127,13 +134,13 @@ void RegistrationFragment::onRegPressed() {
     QJsonObject param;
     param.insert("login", loginEdit->text());
     param.insert("password", passwordEdit->text());
-    if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
+    if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5 && inviteKeyEdit->text().length() > 5) {
         loading->start();
         loadingContaiter->show();
         loginButton->setDisabled(true);
         loginButton->setStyleSheet(BUTTON_DISABLED);
 
-        QNetworkRequest request(QUrl(SERVER_URL + "/api/users/registration"));
+        QNetworkRequest request(QUrl(SERVER_URL + "/api/users/registration/"+inviteKeyEdit->text()));
         request.setHeader(QNetworkRequest::ContentTypeHeader,
                           QStringLiteral("application/json;charset=utf-8"));
         networkManager->post(
@@ -183,7 +190,7 @@ void RegistrationFragment::onRegResult(QNetworkReply *reply) {
 }
 
 void RegistrationFragment::checkData() {
-    if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5) {
+    if (loginEdit->text().length() > 5 && passwordEdit->text().length() > 5 && inviteKeyEdit->text().length() > 5) {
         loginButton->setStyleSheet(BUTTON_SOLID);
     } else {
         loginButton->setStyleSheet(BUTTON_DISABLED);

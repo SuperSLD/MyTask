@@ -16,6 +16,7 @@ class RegistrationFragment : public BaseFragment {
 private:
     QLineEdit *loginEdit;
     QLineEdit *passwordEdit;
+    QLineEdit *inviteKeyEdit;
     QNetworkAccessManager *networkManager;
     QPushButton *loginButton;
 
