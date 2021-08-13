@@ -56,7 +56,6 @@ DeskWidget::DeskWidget(DeskModel *desk) {
 
     mainLayout->setContentsMargins(0,0,0,0);
 
-
     mainLayout->addWidget(title);
     mainLayout->addWidget(descriptionConteiner);
     mainLayout->addLayout(bottomContainer);

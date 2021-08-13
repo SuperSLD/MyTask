@@ -10,8 +10,6 @@
 
 #include <ui/view/waitingspinnerwidget.h>
 
-
-
 class LoginFragment: public BaseFragment {
     Q_OBJECT
 private:
